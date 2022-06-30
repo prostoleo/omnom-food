@@ -59,8 +59,13 @@ import BaseContainer from './BaseContainer.vue';
 const menuItems = ref([
   {
     id: 1,
-    url: '/catalogue',
+    url: '#catalogue',
     text: 'Каталог',
+  },
+  {
+    id: '1-1',
+    url: '#popular',
+    text: 'Популярное',
   },
   {
     id: 2,

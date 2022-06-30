@@ -1,8 +1,8 @@
 <template>
-  <section v-editable="blok" class="relative py-10">
+  <section id="catalogue" v-editable="blok" class="relative py-10">
     <BaseContainer>
       <!-- <pre>{{ blok.categories }}</pre> -->
-      <div class="grid gap-3">
+      <div class="grid gap-3 md:(grid-cols-2)">
         <component
           v-for="item in blok.categories"
           :is="item.content.component"

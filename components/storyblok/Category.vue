@@ -4,7 +4,8 @@
     v-if="isHomePage"
     v-editable="blok"
     :to="`/${blok.full_slug}`"
-    class="block px-5 py-10 grid items-center justify-center relative"
+    class="card-category block px-5 py-10 grid items-center justify-center relative overflow-hidden rounded-sm shadow shadow-lg shadow-dark-800/20 md:(py-20)"
+    @pointerover="animat"
   >
     <!-- <pre>{{ blok }}</pre> -->
     <h2 class="text-2xl text-center font-semibold text-white">
@@ -13,7 +14,8 @@
     </h2>
     <!-- :src="blok.cover.filename" -->
     <img
-      class="absolute w-full h-full inset-0 object-cover -z-1 filter brightness-60"
+      card-cover
+      class="absolute w-full h-full inset-0 object-cover -z-1 filter brightness-60 transform transition-transform duration-300 scale-100"
       :src="blok.content.cover.filename"
       alt=""
     />
@@ -50,4 +52,16 @@ const isHomePage = computed(
 // console.log('props: ', props);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.card-category {
+  img {
+    @apply transform duration-300  scale-100 transition-transform;
+  }
+
+  &:hover {
+    img {
+      @apply transform duration-300  scale-110 transition-transform;
+    }
+  }
+}
+</style>

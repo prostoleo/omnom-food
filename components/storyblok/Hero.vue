@@ -1,23 +1,25 @@
 <template>
   <section v-editable="blok" class="relative min-h-screen grid items-center">
     <BaseContainer class="text-white">
-      <h1 class="text-[28px] leading-tight font-bold md:(text-3xl)">
+      <h1
+        class="text-[28px] leading-tight font-bold md:(text-4xl) lg:(text-5xl)"
+      >
         {{ blok.title }}
       </h1>
       <p
         v-html="richtext"
-        class="mt-7 text-light-500 leading-relaxed max-w-[65ch]"
+        class="mt-7 text-light-500 leading-relaxed max-w-[65ch] md:(text-lg)"
       ></p>
 
       <div class="links-block mt-7 flex items-center gap-3">
         <NuxtLink
-          class="px-5 py-2 inline-block rounded-md bg-yellow-500 border border-transparent text-dark-800 font-semibold"
+          class="px-[1.25em] py-[0.5em] inline-block rounded-md bg-yellow-500 border border-transparent text-dark-800 font-semibold md:(text-lg) lg:(text-2xl)"
           to="/menu"
           >Меню</NuxtLink
         >
         <NuxtLink
-          class="px-5 py-2 inline-block rounded-md bg-transparent text-yellow-500 border border-solid border-yellow-500 font-semibold"
-          to="/catalogue"
+          class="px-[1.25em] py-[0.5em] inline-block rounded-md bg-transparent text-yellow-500 border border-solid border-yellow-500 font-semibold md:(text-lg) lg:(text-2xl)"
+          to="#catalogue"
           >Каталог</NuxtLink
         >
       </div>

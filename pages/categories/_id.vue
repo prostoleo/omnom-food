@@ -34,30 +34,85 @@
             class="flex flex-col gap-1 md:(flex-row items-center gap-3)"
           >
             <div>
+              <!-- label="Сортировка" -->
+              <b-field>
+                <b-select
+                  v-model="sortOption"
+                  placeholder="Выберите сортировку"
+                  rounded
+                >
+                  <option
+                    v-for="sortVal in Object.values(SORT_OPT)"
+                    :key="sortVal"
+                    :value="sortVal"
+                  >
+                    {{ sortVal }}
+                  </option>
+                </b-select>
+              </b-field>
+            </div>
+
+            <div>
+              <button
+                class="sort-button"
+                :aria-label="
+                  ascending
+                    ? `отсортировать по убыванию`
+                    : `отсортировать по возрастанию`
+                "
+                @click="ascending = !ascending"
+              >
+                <b-icon v-if="ascending" icon="sort-ascending"></b-icon>
+                <b-icon v-else icon="sort-descending"></b-icon>
+              </button>
+            </div>
+            <!-- <div>
               <b-field label="Название">
-                <b-select placeholder="Выберите сортировку" rounded>
-                  <option value="по возрастанию">по возрастанию</option>
-                  <option value="по убыванию">по убыванию</option>
+                <b-select
+                  v-model="nameSort"
+                  placeholder="Выберите сортировку"
+                  rounded
+                >
+                  <option
+                    v-for="nameSortVal in Object.values(NAME_SORT_OPT)"
+                    :key="nameSortVal"
+                    :value="nameSortVal"
+                  >
+                    {{ nameSortVal }}
+                  </option>
                 </b-select>
               </b-field>
             </div>
             <div>
               <b-field label="Цена">
-                <b-select placeholder="Выберите сортировку" rounded>
-                  <option value="по возрастанию">по возрастанию</option>
-                  <option value="по убыванию">по убыванию</option>
+                <b-select
+                  v-model="priceSort"
+                  placeholder="Выберите сортировку"
+                  rounded
+                >
+                  <option
+                    v-for="priceSortVal in Object.values(PRICE_SORT_OPT)"
+                    :key="priceSortVal"
+                    :value="priceSortVal"
+                  >
+                    {{ priceSortVal }}
+                  </option>
                 </b-select>
               </b-field>
-            </div>
+            </div> -->
           </div>
         </div>
 
-        <ul class="mt-10 grid gap-5 sm:(grid-cols-2) lg:(grid-cols-3 gap-7)">
-          <li
-            v-for="story in state.products.stories"
-            :key="story.uuid"
-            class=""
-          >
+        <!-- style="grid-auto-rows: 1fr" -->
+        <transition-group
+          v-if="dataToShow.length > 0"
+          tag="ul"
+          name="products"
+          class="mt-10 grid gap-5 sm:(grid-cols-2) lg:(grid-cols-3 gap-7)"
+        >
+          <!-- v-for="story in state.products.stories" -->
+          <!-- class="h-full" -->
+          <li v-for="story in dataToShow" :key="story.uuid">
             <component
               :is="story.content.component"
               v-if="story.content.component"
@@ -65,7 +120,12 @@
               :blok="story.content"
             />
           </li>
-        </ul>
+        </transition-group>
+        <div v-else>
+          <p class="text-center mt-10">
+            К сожалению, по данному запросу ничего не было найдено
+          </p>
+        </div>
       </section>
     </BaseContainer>
   </div>
@@ -220,6 +280,30 @@ const searchQuery = ref('');
 const selected = ref(null);
 const suggestions = ref([]);
 
+/* const NAME_SORT_OPT = {
+  // DEF: `по умолчанию`,
+  ASC: `по возрастанию`,
+  DESC: `по убыванию`,
+};
+const PRICE_SORT_OPT = {
+  // DEF: `по умолчанию`,
+  ASC: `по возрастанию`,
+  DESC: `по убыванию`,
+}; */
+
+/* const nameSort = ref(null);
+const priceSort = ref(null);
+console.log('PRICE_SORT_OPT: ', Object.values(PRICE_SORT_OPT)); */
+
+const ascending = ref(true);
+
+const SORT_OPT = {
+  ALPHABET: `по алфавиту`,
+  PRICE: `по цене`,
+};
+
+const sortOption = ref(SORT_OPT.ALPHABET);
+
 const filteredDataArray = computed(() =>
   suggestions.value.filter((option) => {
     return (
@@ -246,13 +330,78 @@ onMounted(async () => {
   useStoryblokBridge(state.category.id, (story) => (state.category = story));
 });
 
-/* const dataToShow = computed(() => {
-  if (searchQuery.value.length > 0) {
+const dataToShow = computed(() => {
+  let data = state.products.stories;
+  // console.log('data: ', data.slice());
+  let filteredData = null;
+
+  if (selected.value) {
+    // return state.products.stories.filter((story) => {
+    data = data.filter((story) => {
+      return story.content.name === selected.value;
+    });
+    filteredData = data;
   }
-}); */
+
+  if (searchQuery.value.length > 0) {
+    // return state.products.stories.filter((story) => {
+    data = data.filter((story) => {
+      return story.content.name
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase());
+    });
+    filteredData = data;
+  }
+
+  /* if (nameSort.value === NAME_SORT_OPT.ASC) {
+    data.sort((a, b) => {
+      // return a.content.name.toString() - b.content.name.toString()
+      return a.content.name.localeCompare(b.content.name);
+    });
+  }
+
+  if (nameSort.value === NAME_SORT_OPT.DESC) {
+    data.sort((a, b) => {
+      return b.content.name.localeCompare(a.content.name);
+    });
+  }
+
+  if (priceSort.value === PRICE_SORT_OPT.ASC) {
+    data.sort((a, b) => {
+      // return a.content.name.toString() - b.content.name.toString()
+      return a.content.price - b.content.price;
+    });
+  }
+
+  if (nameSort.value === NAME_SORT_OPT.DESC) {
+    data.sort((a, b) => {
+      // return b.content.name.localeCompare(a.content.name);
+      return b.content.price - a.content.price;
+    });
+  } */
+  if (sortOption.value === SORT_OPT.ALPHABET) {
+    data = data
+      .slice()
+      .sort((a, b) => a.content.name.localeCompare(b.content.name));
+  }
+
+  if (sortOption.value === SORT_OPT.PRICE) {
+    data = data.slice().sort((a, b) => a.content.price - b.content.price);
+  }
+
+  if (!ascending.value) {
+    data.reverse();
+  }
+
+  // return state.products.stories;
+  return data;
+});
 </script>
 
 <style lang="scss" scoped>
+.products-move {
+  transition: transform 0.75s ease-out;
+}
 /* b-autocomplete {
   input {
     // @apply border border-solid border-gray-200;
