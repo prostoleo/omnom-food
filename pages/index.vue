@@ -45,9 +45,9 @@ import Page from '~/components/storyblok/Page.vue';
 const cv = now.slice(0, 6) + now.slice(-4);
 console.log('cv: ', cv); */
 const context = useContext();
-console.log('context: ', context);
+// console.log('context: ', context);
 const route = useRoute();
-console.log('route: ', route);
+// console.log('route: ', route);
 // const router = useRouter();
 // console.log('router: ', router);
 
@@ -60,7 +60,7 @@ const fullSlug =
 
 const resolveRelations =
   route.value.path === '/' || route.value.path === ''
-    ? 'Catalogue.categories'
+    ? 'Catalogue.categories,Popular.products'
     : false;
 
 // const { story, fetchState } = useStoryblok('home', {
@@ -70,9 +70,10 @@ const { story, fetchState } = useStoryblok(fullSlug, {
   version,
   // starts_with: 'home',
   ...(resolveRelations && { resolve_relations: resolveRelations }),
+  resolve_links: 'url',
   // cv,
 });
-console.log('story: ', story);
+// console.log('story: ', story);
 // console.log('fetchState: ', fetchState);
 
 // const

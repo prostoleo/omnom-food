@@ -23,15 +23,18 @@
               placeholder="шашлык"
               icon="magnify"
               clearable
+              size="is-medium"
               @select="(option) => (selected = option)"
             >
+              <!-- class="md:(text-lg)" -->
               <template #empty>Не найдено</template>
             </b-autocomplete>
           </div>
 
+          <!-- flex-col -->
           <div
             filters
-            class="flex flex-col gap-1 md:(flex-row items-center gap-3)"
+            class="flex items-center gap-3 md:(flex-row items-center gap-5)"
           >
             <div>
               <!-- label="Сортировка" -->
@@ -40,6 +43,7 @@
                   v-model="sortOption"
                   placeholder="Выберите сортировку"
                   rounded
+                  size="is-medium"
                 >
                   <option
                     v-for="sortVal in Object.values(SORT_OPT)"
@@ -104,28 +108,7 @@
         </div>
 
         <!-- style="grid-auto-rows: 1fr" -->
-        <transition-group
-          v-if="dataToShow.length > 0"
-          tag="ul"
-          name="products"
-          class="mt-10 grid gap-5 sm:(grid-cols-2) lg:(grid-cols-3 gap-7)"
-        >
-          <!-- v-for="story in state.products.stories" -->
-          <!-- class="h-full" -->
-          <li v-for="story in dataToShow" :key="story.uuid">
-            <component
-              :is="story.content.component"
-              v-if="story.content.component"
-              :key="story.content._uid"
-              :blok="story.content"
-            />
-          </li>
-        </transition-group>
-        <div v-else>
-          <p class="text-center mt-10">
-            К сожалению, по данному запросу ничего не было найдено
-          </p>
-        </div>
+        <ProductList :products="dataToShow" />
       </section>
     </BaseContainer>
   </div>
@@ -153,6 +136,7 @@ import {
 } from '@storyblok/nuxt-2';
 import Page from '~/components/storyblok/Page.vue';
 import BaseContainer from '~/components/Base/BaseContainer.vue';
+import ProductList from '~/components/ProductList.vue';
 
 const context = useContext();
 const route = useRoute();
@@ -399,13 +383,11 @@ const dataToShow = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.products-move {
-  transition: transform 0.75s ease-out;
-}
-/* b-autocomplete {
+[searchbox] {
   input {
     // @apply border border-solid border-gray-200;
-    border-color: red !important;
+    // border-color: red !important;
+    // @apply md:(text-lg);
   }
-} */
+}
 </style>

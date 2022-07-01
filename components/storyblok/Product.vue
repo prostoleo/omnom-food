@@ -8,6 +8,7 @@
       class="w-full object-cover"
       :src="`${blok.images[0].filename}/m/`"
       :alt="blok.name"
+      loading="lazy"
     />
     <!-- grid grid-rows-[20%, 1fr, auto] -->
     <div class="card-body p-3">
@@ -22,7 +23,7 @@
       <!-- self-end -->
       <div class="mt-4 flex items-center justify-between">
         <span class="price uppercase font-semibold text-lg leading-none">{{
-          price(blok.price)
+          priceFormatter(blok.price)
         }}</span>
         <button
           class="inline-block px-4 py-2 text-yellow-500 rounded-md border-2 border-solid border-yellow-500 font-semibold transition-colors duration-150 hover:(bg-yellow-500 text-white) focus:(bg-yellow-500 text-white)"
@@ -38,30 +39,15 @@
 </template>
 
 <script setup>
-import { useStoryblokApi } from '@storyblok/nuxt-2';
+import { richtext } from '~/utils/richtext';
+import priceFormatter from '~/utils/priceFormatter';
 
-const props = defineProps({
+defineProps({
   blok: {
     type: Object,
     required: true,
   },
 });
-
-const storyApi = useStoryblokApi();
-// console.log('storyApi: ', storyApi);
-
-const richtext = (text) => {
-  return storyApi.richTextResolver.render(text);
-};
-
-const price = (number) => {
-  return new Intl.NumberFormat('ru-Ru', {
-    style: 'currency',
-    currency: 'RUB',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(number);
-};
 </script>
 
 <style lang="scss" scoped></style>

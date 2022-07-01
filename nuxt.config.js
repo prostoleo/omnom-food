@@ -48,6 +48,7 @@ export default {
         useApiClient: true,
       },
     ],
+    '@pinia/nuxt',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

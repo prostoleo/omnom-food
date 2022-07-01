@@ -1,11 +1,7 @@
 <template>
   <header class="bg-dark-800 py-3 isolation">
     <BaseContainer class="flex items-center justify-between text-white">
-      <NuxtLink
-        to="/"
-        class="uppercase font-semibold text-yellow-500 hover:(opacity-80 text-yellow-500) focus:(opacity-80 text-yellow-500)"
-        >омном</NuxtLink
-      >
+      <BaseLogo />
 
       <button
         class="p-3 cursor-pointer z-50 md:hidden"
@@ -55,11 +51,12 @@
 <script setup>
 import { ref } from '@nuxtjs/composition-api';
 import BaseContainer from './BaseContainer.vue';
+import BaseLogo from './BaseLogo.vue';
 
 const menuItems = ref([
   {
     id: 1,
-    url: '#catalogue',
+    url: '/#catalogue',
     text: 'Каталог',
   },
   {
