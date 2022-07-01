@@ -7,11 +7,18 @@
       :blok="story.content"
     />
   </section> -->
-  <div v-if="fetchState.pending">Loading...</div>
+  <b-loading
+    v-if="fetchState.pending"
+    v-model="fetchState.pending"
+    :is-full-page="true"
+  ></b-loading>
+  <!-- <b-loading v-if="loading" v-model="loading" :is-full-page="true"></b-loading> -->
+
   <!-- <div v-else>
     <pre>{{ story }}</pre>
     </div> -->
-  <div v-else>
+  <!-- <div v-else-if="!fetchState.pending"> -->
+  <div v-else-if="!fetchState.pending">
     <!-- <pre class="bg-yellow-200">{{ story }}</pre> -->
     <component
       :is="story.content.component"
@@ -20,6 +27,14 @@
       :blok="story.content"
     />
   </div>
+  <!-- <div>
+    <component
+      :is="story.data.content.component"
+      v-if="story.data.content.component"
+      :key="story.data.content._uid"
+      :blok="story.data.content"
+    />
+  </div> -->
 </template>
 
 <script setup>
@@ -31,11 +46,19 @@ import {
   useStore,
   useContext,
   useRoute,
+  useAsync,
+  onMounted,
 } from '@nuxtjs/composition-api';
 
 // import StoryblokClient from 'storyblok-js-client';
-import { useStoryblok } from '@storyblok/nuxt-2';
+import {
+  useStoryblok,
+  useStoryblokApi,
+  useStoryblokBridge,
+} from '@storyblok/nuxt-2';
 import Page from '~/components/storyblok/Page.vue';
+
+const loading = ref(false);
 
 // const cv = now.
 
@@ -73,74 +96,33 @@ const { story, fetchState } = useStoryblok(fullSlug, {
   resolve_links: 'url',
   // cv,
 });
+
 // console.log('story: ', story);
 // console.log('fetchState: ', fetchState);
 
-// const
+/* const storyblokApi = useStoryblokApi();
+// const story = ref(null);
+const story = async useAsync(async () => {
+  const res = await storyblokApi.get(`cdn/stories/${fullSlug}`, {
+    version,
+    ...(resolveRelations && { resolve_relations: resolveRelations }),
+    resolve_links: 'url',
+  });
+
+  // story.value = res;
+  // console.log('res.value.data: ', res.value.data);
+  return res;
+});
+// console.log('story: ', story);
+
+onMounted(() => {
+  console.log('story: ', story);
+  useStoryblokBridge(story.id, (story) => (story.value = story));
+}); */
 
 /* const store = useStore();
 
 const Storyblok = new StoryblokClient({
   accessToken: process.env.STORYBLOK_KEY,
 }); */
-
-// const store = useStore();
-/* const data = ref(null);
-const directions = ref(null);
-const postsForCards = ref(null);
-
-const { fetch, fetchState } = useFetch(async () => {
-  data.value = await Storyblok.get('cdn/stories/', {
-    // version: 'draft',
-    version: 'published',
-    starts_with: 'home',
-  })
-    .then((res) => {
-      return res.data;
-      // return res.data;
-    })
-    .catch((err) => {
-      console.warn(`💣💣💣 - ${err.response}`);
-    });
-
-  // todo направления
-  directions.value = await Storyblok.get('cdn/stories/', {
-    // version: 'draft',
-    version: 'published',
-    starts_with: 'directions',
-  })
-    .then((res) => {
-      store.dispatch('addDirections', res.data);
-
-      return res.data;
-      // return res.data;
-    })
-    .catch((err) => {
-      console.warn(`💣💣💣 - ${err.response}`);
-    });
-
-  // todo для карточек
-  postsForCards.value = await Storyblok.get('cdn/stories', {
-    // version: 'draft',
-    version: 'published',
-    starts_with: 'posts',
-    excluding_fields: 'markdown_block,flex_gallery,grid_gallery',
-    sort_by: 'published_at:desc',
-  })
-    .then((res) => {
-      store.dispatch('addPostsForCards', res.data);
-
-      return res.data;
-      // return res.data;
-    })
-    .catch((err) => {
-      console.warn(`💣💣💣 - ${err.response}`);
-    });
-});
-
-// Manually trigger a refetch
-fetch();
-
-provide('postsForCards', postsForCards);
-provide('directions', directions); */
 </script>

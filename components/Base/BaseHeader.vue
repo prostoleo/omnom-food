@@ -4,14 +4,17 @@
       <BaseLogo />
 
       <button
-        class="p-3 cursor-pointer z-50 md:hidden"
-        aria-label="Открыть/закрыть меню"
+        class="p-3 cursor-pointer z-50 md:hidden grid gap-2"
+        :class="{ opened: isNavOpen }"
+        :aria-label="isNavOpen ? `Закрыть меню` : `Открыть меню`"
         toggle-nav
         @click="toggleNav"
       >
         <!-- content-open-quote -->
         <span
-          class="burger-block block w-8 h-1 bg-white relative rounded-sm"
+          v-for="index in 3"
+          :key="index"
+          class="burger-block w-8 h-1 bg-white relative rounded-sm"
         ></span>
         <!-- <div class="menu">
           <div v-for="index in 3" :key="index" class="bar"></div>
@@ -74,11 +77,11 @@ const menuItems = ref([
     url: '#contacts',
     text: 'Контакты',
   },
-  {
+  /* {
     id: 4,
     url: '#about',
     text: 'О нас',
-  },
+  }, */
   {
     id: 5,
     url: '/menu',
@@ -107,13 +110,26 @@ const toggleNav = () => {
 
 <style lang="scss" scoped>
 button[toggle-nav] {
-  .burger-block {
-    @apply transform transition-transform duration-150 before:(content-[''] absolute left-0 right-0 -top-[10px] w-full h-1 rounded-sm origin-center bg-cyan-500 z-1) after:(content-[''] absolute left-0 right-0 -bottom-[10px] w-full h-1 rounded-sm origin-center bg-red-500 z-1);
+  span {
+    @apply transform rotate-0 transition transition-all duration-150 origin-left;
+  }
 
-    &.opened {
-      @apply transform -translate-x-10/10 before:(content-[''] transform translate-x-10/10 rotate-x-45) after:(content-[''] transform translate-x-10/10 -rotate-x-45);
+  &.opened {
+    span {
+      &:first-of-type {
+        @apply transform rotate-45 delay-75;
+      }
+
+      &:nth-of-type(2) {
+        @apply opacity-0 invisible;
+      }
+
+      &:last-of-type {
+        @apply transform -rotate-45 delay-150;
+      }
     }
   }
+  // }
 }
 
 nav.nav {
@@ -132,7 +148,7 @@ nav.nav {
   }
 
   &.nuxt-link-exact-active {
-    @apply text-yellow-400;
+    @apply text-yellow-400 border-yellow-400;
   }
 }
 </style>

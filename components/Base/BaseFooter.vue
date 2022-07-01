@@ -1,10 +1,10 @@
 <template>
   <footer class="py-5 bg-black text-white">
     <BaseContainer>
-      <div class="footer-content">
+      <div class="footer-content md:(grid grid-cols-2 gap-3)">
         <BaseLogo />
 
-        <div class="nav mt-5">
+        <div class="nav mt-[1.25em] md:(mt-0)">
           <ul class="nav__list flex flex-col gap-1">
             <li
               v-for="item in footerMenuItems"
@@ -24,13 +24,15 @@
         </div>
         <!-- /.nav -->
 
-        <small class="footer-copy block mt-4">
-          {{ yearComp }}
-        </small>
+        <div>
+          <small class="footer-copy block mt-[1em] !mb-0 md:(mt-0)">
+            {{ yearComp }}
+          </small>
 
-        <small class="block text-xs text-light-300">
-          Сайт разработан Леонидом Радостновым
-        </small>
+          <small class="block !mt-3 text-xs text-light-300">
+            Сайт разработан Леонидом Радостновым
+          </small>
+        </div>
       </div>
     </BaseContainer>
   </footer>
@@ -46,15 +48,14 @@ const footerMenuItems = ref([
     text: `Политика конфиденциальности`,
     url: '/politics',
   },
-  {
+  /* {
     text: `Оферта`,
     url: '/offer',
-  },
+  }, */
 ]);
 
 const yearComp = computed(() => {
   const year = new Date().getFullYear();
-  console.log('year: ', year);
 
   if (year === 2022) {
     return `© 2022.  Все права защищены`;

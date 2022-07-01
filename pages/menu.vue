@@ -1,13 +1,31 @@
 <template>
-  <div v-if="state.category && state.products">
+  <!-- <b-loading
+    v-if="fetchState.pending"
+    v-model="fetchState.pending"
+    :is-full-page="true"
+  ></b-loading>
+  <b-loading
+    v-else-if="fetchProducts.pending"
+    v-model="fetchProducts.pending"
+    :is-full-page="true"
+  ></b-loading> -->
+  <b-loading v-if="loading" v-model="loading" :is-full-page="true"></b-loading>
+
+  <!-- <div v-else>
+    <pre>{{ story }}</pre>
+    </div> -->
+  <!-- <div v-else-if="!fetchState.pending"> -->
+  <!-- <div v-else-if="!fetchState.pending || !fetchProducts.pending"> -->
+  <div v-else-if="!loading">
+    <!-- <pre class="bg-yellow-200">{{ story }}</pre> -->
     <component
-      :is="state.category.story.content.component"
-      v-if="state.category.story.content.component"
-      :key="state.category.story.content._uid"
-      :blok="state.category.story.content"
+      :is="story.content.component"
+      v-if="story.content.component"
+      :key="story.content._uid"
+      :blok="story.content"
     />
+    <!-- <pre>{{ state.products }}</pre> -->
     <BaseContainer>
-      <!-- <ProductsSection></ProductsSection> -->
       <section class="py-7 md:(py-12)">
         <div
           class="flex flex-col gap-3 md:(grid grid-cols-2 gap-5 items-center justify-between)"
@@ -76,34 +94,34 @@
 
         <ProductList :products="dataToShow" />
       </section>
+
+      <!-- <ProductList :products="state.products.stories" /> -->
     </BaseContainer>
   </div>
 </template>
 
 <script setup>
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  ref,
   reactive,
-  useFetch,
-  provide,
-  useStore,
+  ref,
+  computed,
+  // useFetch,
+  // provide,
+  // useStore,
   useContext,
   useRoute,
+  // useAsync,
   onMounted,
-  computed,
 } from '@nuxtjs/composition-api';
 
-// import StoryblokClient from 'storyblok-js-client';
 import {
   useStoryblok,
-  useStoryblokBridge,
   useStoryblokApi,
+  useStoryblokBridge,
 } from '@storyblok/nuxt-2';
-import Page from '~/components/storyblok/Page.vue';
+// import Page from '~/components/storyblok/Page.vue';
 import BaseContainer from '~/components/Base/BaseContainer.vue';
 import ProductList from '~/components/ProductList.vue';
-import ProductsSection from '~/components/ProductsSection.vue';
 
 const context = useContext();
 const route = useRoute();
@@ -117,94 +135,40 @@ const fullSlug =
 
 const resolveRelations =
   route.value.path === '/' || route.value.path === ''
-    ? 'Catalogue.categories'
+    ? 'Catalogue.categories,Popular.products'
     : false;
 
+const loading = ref(true);
+
 // const { story, fetchState } = useStoryblok('home', {
-/**
- * * работает
- */
-/*   const { story, fetchState } = useStoryblok(fullSlug, {
-    // version: 'draft',
-  // version: 'published',
-  version,
-  // starts_with: 'home',
-  // ...(resolveRelations && { resolve_relations: resolveRelations }),
-  // resolve_relations: 'uuid',
-  resolve_links: 'uuid',
-  // by_uuids: 'uuid',
-  // cv,
-});
-console.log('story: ', story); */
-
-/* const category = ref(null);
-function getCategory() {
-  const res = useStoryblok(fullSlug, {
-    // version: 'draft',
-    // version: 'published',
-    version,
-    // starts_with: 'home',
-    // ...(resolveRelations && { resolve_relations: resolveRelations }),
-    // resolve_relations: 'uuid',
-    // resolve_links: 'uuid',
-    // by_uuids: 'uuid',
-    // cv,
-  });
-
-  category.value = res.story;
-  console.log('category: ', category);
-} */
-
-// const { story: storyProducts, fetchState2 } = useStoryblok(``, {
-/* const answer = useStoryblok(``, {
+const { story, fetchState } = useStoryblok(fullSlug, {
   // version: 'draft',
   // version: 'published',
   version,
-  starts_with: 'products/',
-  // resolve_relations: 'Product.category_info',
-  resolve_links: 'story',
+  // starts_with: 'home',
+  ...(resolveRelations && { resolve_relations: resolveRelations }),
+  resolve_links: 'url',
   // cv,
 });
-// console.log('storyProducts: ', storyProducts);
-console.log('answer: ', answer);
-// console.log('story: ', story); */
-
-/* const storyblokApi = useStoryblokApi();
-// const state = reactive({ story: data.story });
-const state = reactive({ story: null });
-// const story = reactive({ data: null });
-async function getData(params) {
-  const { data } = await storyblokApi.get('cdn/stories/', {
-    version,
-    starts_with: 'products/',
-    resolve_relations: 'Product.category_info',
-  });
-  console.log('data: ', data);
-
-  state.story = data;
-  // story.data = data.stories;
-}
-
-onMounted(async () => {
-  await getData();
-  useStoryblokBridge(state.story.id, (story) => (state.story = story));
-}); */
 
 const storyblokApi = useStoryblokApi();
-// const state = reactive({ story: data.story });
-const state = reactive({ products: null, category: null });
-// const story = reactive({ data: null });
-async function getCategory() {
-  const { data } = await storyblokApi.get(`cdn/stories/${fullSlug}`, {
+
+const state = reactive({
+  products: null,
+  categories: null,
+});
+
+async function getCategories() {
+  const { data } = await storyblokApi.get(`cdn/stories/`, {
     version,
-    // starts_with: 'products/',
+    starts_with: 'categories/',
     // by_uuids: story.uuid,
     // by_uuids: category.value.uuid,
     excluding_fields: 'products',
   });
   // console.log('data: ', data);
 
-  state.category = data;
+  state.categories = data;
   // story.data = data.stories;
 }
 
@@ -214,11 +178,7 @@ async function getProducts() {
   const { data } = await storyblokApi.get('cdn/stories/', {
     version,
     starts_with: 'products/',
-    filter_query: {
-      category_info: {
-        in: state.category.story.uuid,
-      },
-    },
+    // resolve_relations: 'Product.category_info',
   });
   // console.log('data: ', data);
 
@@ -230,21 +190,6 @@ async function getProducts() {
 const searchQuery = ref('');
 const selected = ref(null);
 const suggestions = ref([]);
-
-/* const NAME_SORT_OPT = {
-  // DEF: `по умолчанию`,
-  ASC: `по возрастанию`,
-  DESC: `по убыванию`,
-};
-const PRICE_SORT_OPT = {
-  // DEF: `по умолчанию`,
-  ASC: `по возрастанию`,
-  DESC: `по убыванию`,
-}; */
-
-/* const nameSort = ref(null);
-const priceSort = ref(null);
-console.log('PRICE_SORT_OPT: ', Object.values(PRICE_SORT_OPT)); */
 
 const ascending = ref(true);
 
@@ -271,7 +216,7 @@ function getProductNames() {
   suggestions.value = state.products.stories.map((story) => story.content.name);
 }
 
-onMounted(async () => {
+/* onMounted(async () => {
   await getCategory();
   await getProducts();
 
@@ -279,19 +224,32 @@ onMounted(async () => {
 
   useStoryblokBridge(state.products.id, (story) => (state.products = story));
   useStoryblokBridge(state.category.id, (story) => (state.category = story));
+}); */
+
+onMounted(async () => {
+  await getProducts();
+  await getCategories();
+  getProductNames();
+  loading.value = false;
+
+  useStoryblokBridge(state.products.id, (story) => (state.products = story));
+  useStoryblokBridge(
+    state.categories.id,
+    (story) => (state.categories = story)
+  );
 });
 
 const dataToShow = computed(() => {
   let data = state.products.stories;
   // console.log('data: ', data.slice());
-  let filteredData = null;
+  // let filteredData = null;
 
   if (selected.value) {
     // return state.products.stories.filter((story) => {
     data = data.filter((story) => {
       return story.content.name === selected.value;
     });
-    filteredData = data;
+    // filteredData = data;
   }
 
   if (searchQuery.value.length > 0) {
@@ -301,35 +259,8 @@ const dataToShow = computed(() => {
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase());
     });
-    filteredData = data;
+    // filteredData = data;
   }
-
-  /* if (nameSort.value === NAME_SORT_OPT.ASC) {
-    data.sort((a, b) => {
-      // return a.content.name.toString() - b.content.name.toString()
-      return a.content.name.localeCompare(b.content.name);
-    });
-  }
-
-  if (nameSort.value === NAME_SORT_OPT.DESC) {
-    data.sort((a, b) => {
-      return b.content.name.localeCompare(a.content.name);
-    });
-  }
-
-  if (priceSort.value === PRICE_SORT_OPT.ASC) {
-    data.sort((a, b) => {
-      // return a.content.name.toString() - b.content.name.toString()
-      return a.content.price - b.content.price;
-    });
-  }
-
-  if (nameSort.value === NAME_SORT_OPT.DESC) {
-    data.sort((a, b) => {
-      // return b.content.name.localeCompare(a.content.name);
-      return b.content.price - a.content.price;
-    });
-  } */
 
   if (sortOption.value === SORT_OPT.ALPHABET) {
     data = data
@@ -350,12 +281,4 @@ const dataToShow = computed(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-[searchbox] {
-  input {
-    // @apply border border-solid border-gray-200;
-    // border-color: red !important;
-    // @apply md:(text-lg);
-  }
-}
-</style>
+<style lang="scss" scoped></style>
