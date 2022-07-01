@@ -11,20 +11,37 @@
 
     <button
       v-if="showScrollToTop"
-      class="fixed bottom-20 right-5 p-3 rounded-md bg-dark-800 shadow shadow-lg shadow-light-200/40 text-white"
+      class="fixed bottom-20 right-3 p-3 rounded-md bg-dark-800 shadow shadow-lg shadow-light-200/40 text-white"
       aria-label="переместиться наверх страницы"
       @click="scrollToTop"
     >
       <b-icon icon="arrow-up-thick"></b-icon>
     </button>
     <button
-      class="fixed bottom-5 right-5 p-3 rounded-md bg-yellow-500 shadow shadow-lg shadow-light-200/40 text-dark transition transition-all"
+      class="fixed block !m-0 bottom-5 right-3 p-3 rounded-md bg-yellow-500 shadow shadow-lg shadow-light-200/40 overflow-visible text-dark transition transition-all"
       aria-label="переместиться наверх страницы"
+      @click="showCart"
     >
+      <!-- style="z-index: 9999" -->
       <!-- :class="{ '!bottom-5': !showScrollToTop }" -->
       <!-- @click="show" -->
       <b-icon icon="cart-outline"></b-icon>
+      <span
+        v-if="cartStore.getTotalQuantities"
+        class="w-5 h-5 inline-flex justify-center items-center absolute top-0 right-0 text-sm font-semibold rounded-full bg-red-400 text-white transform -translate-y-1/2 translate-x-1/2"
+      >
+        {{ cartStore.getTotalQuantities }}
+      </span>
     </button>
+
+    <!-- <transition v-if="cartStore.getIsCartShown" name="cart"> -->
+    <Cart />
+    <!-- </transition> -->
+    <div
+      v-if="cartStore.getIsCartShown"
+      class="cart-overlay bg-black/60 fixed left-0 top-0 right-0 bottom-0 w-screen h-screen z-50"
+      @click.self="cartStore.hideCart()"
+    ></div>
   </div>
 </template>
 
@@ -32,8 +49,18 @@
 import useScrollToTop from '~/composables/scrollToTop';
 import BaseHeader from '~/components/Base/BaseHeader.vue';
 import BaseFooter from '~/components/Base/BaseFooter.vue';
+import Cart from '~/components/Cart.vue';
+import { useCartStore } from '~/store/cart';
 
 const { scrollToTop, showScrollToTop } = useScrollToTop();
+
+const cartStore = useCartStore();
+// console.log('cartStore: ', cartStore);
+
+const showCart = () => {
+  // document.querySelector('html').classList.add('!overflow-y-hidden');
+  cartStore.showCart();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -41,5 +68,21 @@ const { scrollToTop, showScrollToTop } = useScrollToTop();
   grid-template-rows:
     minmax(min-content, max-content) 1fr
     minmax(min-content, max-content);
+}
+
+.cart-enter-active {
+  transition: transform 250ms ease-in-out;
+}
+.cart-leave-active {
+  transition: transform 250ms ease-in-out;
+}
+
+.cart-enter-to,
+.cart-leave-from {
+  transform: translateX(0%);
+}
+.cart-leave-to,
+.cart-enter-from {
+  transform: translateX(120%);
 }
 </style>

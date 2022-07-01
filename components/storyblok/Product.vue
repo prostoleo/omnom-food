@@ -29,6 +29,7 @@
           class="inline-block px-4 py-2 text-yellow-500 rounded-md border-2 border-solid border-yellow-500 font-semibold transition-colors duration-150 hover:(bg-yellow-500 text-white) focus:(bg-yellow-500 text-white)"
           add-to-cart
           aria-label="Добавить в корзину"
+          @click="addToCart"
         >
           <b-icon icon="cart" size="is-small"> </b-icon>
           В корзину
@@ -41,13 +42,29 @@
 <script setup>
 import { richtext } from '~/utils/richtext';
 import priceFormatter from '~/utils/priceFormatter';
+import { useCartStore } from '~/store/cart';
 
-defineProps({
+const props = defineProps({
   blok: {
     type: Object,
     required: true,
   },
 });
+
+const cartStore = useCartStore();
+
+function addToCart() {
+  console.log(`add to cart`);
+  console.log('blok: ', props.blok);
+  const goodData = {
+    id: props.blok._uid,
+    name: props.blok.name,
+    price: Number.parseInt(props.blok.price),
+    image: `${props.blok.images[0].filename}/m/`,
+  };
+
+  cartStore.addToCart(goodData);
+}
 </script>
 
 <style lang="scss" scoped></style>
