@@ -1,5 +1,5 @@
 <template>
-  <section class="popular-section py-10">
+  <section id="popular" class="popular-section py-10">
     <BaseContainer>
       <!-- <pre>{{ blok }}</pre> -->
       <BaseSectionTitle>

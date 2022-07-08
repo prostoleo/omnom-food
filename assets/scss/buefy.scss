@@ -9,6 +9,8 @@ $primary-invert: findColorInvert($primary);
 $twitter: #4099ff;
 $twitter-invert: findColorInvert($twitter);
 
+$loading-background: rgba(0, 0, 0, 0.55);
+
 // Lists and maps
 $custom-colors: null !default;
 $custom-shades: null !default;

@@ -51,6 +51,10 @@ export default {
     '@pinia/nuxt',
   ],
 
+  env: {
+    YANDEX_FUNC_SUBMIT: process.env.YANDEX_FUNC_SUBMIT,
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/buefy

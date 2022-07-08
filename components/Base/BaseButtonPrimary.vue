@@ -9,6 +9,7 @@
     v-else
     class="px-[1.25em] py-[0.5em] inline-block rounded-md bg-yellow-500 border border-transparent text-dark-800 font-semibold md:(text-lg) lg:(text-2xl) hover:(opacity-80)"
     :to="url"
+    @click="emit('click-btn')"
   >
     <slot />
   </NuxtLink>
@@ -25,6 +26,8 @@ defineProps({
     default: '/',
   },
 });
+
+const emit = defineEmits(['click-btn']);
 </script>
 
 <style lang="scss" scoped></style>

@@ -141,6 +141,7 @@ const resolveRelations =
 const loading = ref(true);
 
 // const { story, fetchState } = useStoryblok('home', {
+//* для компонента menuHero
 const { story, fetchState } = useStoryblok(fullSlug, {
   // version: 'draft',
   // version: 'published',
@@ -177,6 +178,8 @@ async function getProducts() {
   // console.log('state.category.story.uuid: ', state.category.story.uuid);
   const { data } = await storyblokApi.get('cdn/stories/', {
     version,
+    per_page: 24,
+
     starts_with: 'products/',
     // resolve_relations: 'Product.category_info',
   });
