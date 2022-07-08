@@ -1,13 +1,15 @@
 * {
   scroll-behavior: smooth !important;
-  scroll-margin-top: 5rem !important;
+  // scroll-margin-top: 5rem !important;
 }
 
 section,
 h2 {
   scroll-margin-top: 5rem !important;
+  scroll-margin-block-start: 5rem !important;
 }
 
 [id] {
   scroll-margin-top: 5rem !important;
+  scroll-margin-block-start: 5rem !important;
 }

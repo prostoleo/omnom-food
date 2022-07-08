@@ -1,6 +1,9 @@
 <template>
   <!-- grid grid-rows-[auto, 1fr] h-full -->
-  <div v-editable="blok" class="card overflow-hidden">
+  <div
+    v-editable="blok"
+    class="card overflow-hidden grid grid-rows-[auto, 1fr] h-full"
+  >
     <!-- <pre>{{ blok.images[0] }}</pre> -->
     <!-- <pre>{{ blok.images[0].filename }}</pre> -->
 
@@ -11,7 +14,7 @@
       loading="lazy"
     />
     <!-- grid grid-rows-[20%, 1fr, auto] -->
-    <div class="card-body p-3">
+    <div class="card-body p-3 grid grid-rows-[min-content, 1fr, auto]">
       <h3 class="text-xl leading-tight font-semibold md:(text-2xl)">
         {{ blok.name }}
       </h3>
@@ -21,7 +24,7 @@
       ></p>
 
       <!-- self-end -->
-      <div class="mt-4 flex items-center justify-between">
+      <div class="mt-4 flex items-center justify-between self-end">
         <span class="price uppercase font-semibold text-lg leading-none">{{
           priceFormatter(blok.price)
         }}</span>

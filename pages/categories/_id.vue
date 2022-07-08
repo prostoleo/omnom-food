@@ -81,13 +81,12 @@
 </template>
 
 <script setup>
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ref,
   reactive,
-  useFetch,
-  provide,
-  useStore,
+  // useFetch,
+  // provide,
+  // useStore,
   useContext,
   useRoute,
   onMounted,
@@ -96,14 +95,14 @@ import {
 
 // import StoryblokClient from 'storyblok-js-client';
 import {
-  useStoryblok,
+  // useStoryblok,
   useStoryblokBridge,
   useStoryblokApi,
 } from '@storyblok/nuxt-2';
-import Page from '~/components/storyblok/Page.vue';
+// import Page from '~/components/storyblok/Page.vue';
 import BaseContainer from '~/components/Base/BaseContainer.vue';
 import ProductList from '~/components/ProductList.vue';
-import ProductsSection from '~/components/ProductsSection.vue';
+// import ProductsSection from '~/components/ProductsSection.vue';
 
 const context = useContext();
 const route = useRoute();
@@ -114,81 +113,6 @@ const fullSlug =
   route.value.path === '/' || route.value.path === ''
     ? 'home'
     : route.value.path;
-
-const resolveRelations =
-  route.value.path === '/' || route.value.path === ''
-    ? 'Catalogue.categories'
-    : false;
-
-// const { story, fetchState } = useStoryblok('home', {
-/**
- * * работает
- */
-/*   const { story, fetchState } = useStoryblok(fullSlug, {
-    // version: 'draft',
-  // version: 'published',
-  version,
-  // starts_with: 'home',
-  // ...(resolveRelations && { resolve_relations: resolveRelations }),
-  // resolve_relations: 'uuid',
-  resolve_links: 'uuid',
-  // by_uuids: 'uuid',
-  // cv,
-});
-console.log('story: ', story); */
-
-/* const category = ref(null);
-function getCategory() {
-  const res = useStoryblok(fullSlug, {
-    // version: 'draft',
-    // version: 'published',
-    version,
-    // starts_with: 'home',
-    // ...(resolveRelations && { resolve_relations: resolveRelations }),
-    // resolve_relations: 'uuid',
-    // resolve_links: 'uuid',
-    // by_uuids: 'uuid',
-    // cv,
-  });
-
-  category.value = res.story;
-  console.log('category: ', category);
-} */
-
-// const { story: storyProducts, fetchState2 } = useStoryblok(``, {
-/* const answer = useStoryblok(``, {
-  // version: 'draft',
-  // version: 'published',
-  version,
-  starts_with: 'products/',
-  // resolve_relations: 'Product.category_info',
-  resolve_links: 'story',
-  // cv,
-});
-// console.log('storyProducts: ', storyProducts);
-console.log('answer: ', answer);
-// console.log('story: ', story); */
-
-/* const storyblokApi = useStoryblokApi();
-// const state = reactive({ story: data.story });
-const state = reactive({ story: null });
-// const story = reactive({ data: null });
-async function getData(params) {
-  const { data } = await storyblokApi.get('cdn/stories/', {
-    version,
-    starts_with: 'products/',
-    resolve_relations: 'Product.category_info',
-  });
-  console.log('data: ', data);
-
-  state.story = data;
-  // story.data = data.stories;
-}
-
-onMounted(async () => {
-  await getData();
-  useStoryblokBridge(state.story.id, (story) => (state.story = story));
-}); */
 
 const storyblokApi = useStoryblokApi();
 // const state = reactive({ story: data.story });
@@ -231,21 +155,6 @@ const searchQuery = ref('');
 const selected = ref(null);
 const suggestions = ref([]);
 
-/* const NAME_SORT_OPT = {
-  // DEF: `по умолчанию`,
-  ASC: `по возрастанию`,
-  DESC: `по убыванию`,
-};
-const PRICE_SORT_OPT = {
-  // DEF: `по умолчанию`,
-  ASC: `по возрастанию`,
-  DESC: `по убыванию`,
-}; */
-
-/* const nameSort = ref(null);
-const priceSort = ref(null);
-console.log('PRICE_SORT_OPT: ', Object.values(PRICE_SORT_OPT)); */
-
 const ascending = ref(true);
 
 const SORT_OPT = {
@@ -284,14 +193,14 @@ onMounted(async () => {
 const dataToShow = computed(() => {
   let data = state.products.stories;
   // console.log('data: ', data.slice());
-  let filteredData = null;
+  // let filteredData = null;
 
   if (selected.value) {
     // return state.products.stories.filter((story) => {
     data = data.filter((story) => {
       return story.content.name === selected.value;
     });
-    filteredData = data;
+    // filteredData = data;
   }
 
   if (searchQuery.value.length > 0) {
@@ -301,35 +210,8 @@ const dataToShow = computed(() => {
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase());
     });
-    filteredData = data;
+    // filteredData = data;
   }
-
-  /* if (nameSort.value === NAME_SORT_OPT.ASC) {
-    data.sort((a, b) => {
-      // return a.content.name.toString() - b.content.name.toString()
-      return a.content.name.localeCompare(b.content.name);
-    });
-  }
-
-  if (nameSort.value === NAME_SORT_OPT.DESC) {
-    data.sort((a, b) => {
-      return b.content.name.localeCompare(a.content.name);
-    });
-  }
-
-  if (priceSort.value === PRICE_SORT_OPT.ASC) {
-    data.sort((a, b) => {
-      // return a.content.name.toString() - b.content.name.toString()
-      return a.content.price - b.content.price;
-    });
-  }
-
-  if (nameSort.value === NAME_SORT_OPT.DESC) {
-    data.sort((a, b) => {
-      // return b.content.name.localeCompare(a.content.name);
-      return b.content.price - a.content.price;
-    });
-  } */
 
   if (sortOption.value === SORT_OPT.ALPHABET) {
     data = data

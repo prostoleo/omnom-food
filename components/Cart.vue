@@ -1,16 +1,9 @@
 <template>
-  <!-- :class="{ hidden: !cartStore.getIsCartShown }" -->
-  <!-- v-if="cartStore.getIsCartShown" name="cart" -->
-  <!-- <transition > -->
   <div
     class="cart fixed right-0 top-0 bottom-0 min-w-xs w-4/5 max-w-lg bg-white rounded-sm isolate text-dark-800 grid overflow-hidden transform translate-x-full duration-200"
     :class="{ '!translate-x-0': cartStore.getIsCartShown }"
     style="z-index: 100"
   >
-    <!-- <div
-      class="cart-overlay bg-black/60 fixed left-0 top-0 right-0 bottom-0 w-screen h-screen z-50"
-      @click.self="cartStore.hideCart()"
-    > -->
     <header
       class="cart__header flex items-center justify-between border-b border-solid border-gray-200 p-2"
     >
@@ -40,7 +33,7 @@
           class="flex items-center gap-2 transform transition-all duration-200"
         >
           <img
-            class="rounded-full"
+            class="rounded-full aspect-square lg:(w-24 h-24 )"
             :src="item.image"
             :alt="item.name"
             width="50"
@@ -50,7 +43,9 @@
             class="text-with-controlers flex items-center justify-between w-full"
           >
             <div>
-              <h3 class="font-semibold hyphens-auto">{{ item.name }}</h3>
+              <h3 class="font-semibold hyphens-auto lg:(text-lg)">
+                {{ item.name }}
+              </h3>
               <div class="count inline-flex items-center gap-1">
                 <button
                   class="hover:(text-red-400)"
@@ -58,7 +53,7 @@
                 >
                   <b-icon icon="minus"></b-icon>
                 </button>
-                <span class="count">{{ item.quantity }}</span>
+                <span class="count lg:(text-lg)">{{ item.quantity }}</span>
                 <button
                   class="hover:(text-green-400)"
                   @click="cartStore.increaseQuantity(item.id)"
@@ -68,8 +63,8 @@
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
-              <span class="price font-semibold">{{
+            <div class="flex items-center gap-2 ml-3">
+              <span class="price font-semibold lg:(text-lg)">{{
                 priceFormatter(item.price)
               }}</span>
 
@@ -116,7 +111,6 @@
 </template>
 
 <script setup>
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed } from '@nuxtjs/composition-api';
 import BaseButtonPrimary from './Base/BaseButtonPrimary.vue';
 import priceFormatter from '~/utils/priceFormatter';
@@ -124,7 +118,6 @@ import { useCartStore } from '~/store/cart';
 
 const cartStore = useCartStore();
 
-// const getShowCart = computed(() => cartStore.getShowCart);
 const items = computed(() => cartStore.getCartItems);
 </script>
 
