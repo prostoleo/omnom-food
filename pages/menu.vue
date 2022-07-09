@@ -1,30 +1,13 @@
 <template>
-  <!-- <b-loading
-    v-if="fetchState.pending"
-    v-model="fetchState.pending"
-    :is-full-page="true"
-  ></b-loading>
-  <b-loading
-    v-else-if="fetchProducts.pending"
-    v-model="fetchProducts.pending"
-    :is-full-page="true"
-  ></b-loading> -->
   <b-loading v-if="loading" v-model="loading" :is-full-page="true"></b-loading>
 
-  <!-- <div v-else>
-    <pre>{{ story }}</pre>
-    </div> -->
-  <!-- <div v-else-if="!fetchState.pending"> -->
-  <!-- <div v-else-if="!fetchState.pending || !fetchProducts.pending"> -->
   <div v-else-if="!loading">
-    <!-- <pre class="bg-yellow-200">{{ story }}</pre> -->
     <component
       :is="story.content.component"
       v-if="story.content.component"
       :key="story.content._uid"
       :blok="story.content"
     />
-    <!-- <pre>{{ state.products }}</pre> -->
     <BaseContainer>
       <section class="py-7 md:(py-12)">
         <div
@@ -34,13 +17,16 @@
             Продукты
           </h2>
 
-          <div searchbox class="max-w-[50ch] md:(ml-auto)">
+          <div
+            searchbox
+            class="max-w-[50ch] md:(ml-auto) flex items-center gap-2"
+          >
+            <!-- icon="magnify" -->
             <b-autocomplete
               v-model="searchQuery"
               rounded
               :data="filteredDataArray"
               placeholder="шашлык"
-              icon="magnify"
               clearable
               size="is-medium"
               @select="(option) => (selected = option)"
@@ -48,13 +34,23 @@
               <!-- class="md:(text-lg)" -->
               <template #empty>Не найдено</template>
             </b-autocomplete>
+            <!-- @keydown.enter="searchProducts" -->
+            <button
+              class="p-2 rounded-sm bg-light-300 hover:(bg-yellow-500 text-white)"
+              @click="searchProducts"
+            >
+              <b-icon icon="magnify"></b-icon>
+            </button>
           </div>
 
           <!-- flex-col -->
           <div
             filters
-            class="flex items-center gap-3 md:(flex-row items-center gap-5)"
+            class="flex items-center gap-3 w-full md:(flex-row items-center gap-5)"
           >
+            <!-- <div
+              class="left flex items-center gap-3 md:(flex-row items-center gap-5)"
+            > -->
             <div>
               <!-- label="Сортировка" -->
               <b-field>
@@ -89,7 +85,23 @@
                 <b-icon v-else icon="sort-descending"></b-icon>
               </button>
             </div>
+            <!-- </div> -->
           </div>
+          <ul v-if="numberOfPages > 1" class="right pagination ml-auto">
+            <li
+              v-for="index in numberOfPages"
+              :key="index"
+              class="pagination-item p-1 text-yellow-500 font-medium w-8 h-8 aspect-square rounded-sm cursor-pointer leading-none inline-flex items-center justify-center"
+              :class="
+                index === currentPage
+                  ? `bg-yellow-500 text-white font-semibold`
+                  : ``
+              "
+              @click="showPage(index)"
+            >
+              {{ index }}
+            </li>
+          </ul>
         </div>
 
         <ProductList :products="dataToShow" />
@@ -112,6 +124,7 @@ import {
   useRoute,
   // useAsync,
   onMounted,
+  watch,
 } from '@nuxtjs/composition-api';
 
 import {
@@ -120,6 +133,7 @@ import {
   useStoryblokBridge,
 } from '@storyblok/nuxt-2';
 // import Page from '~/components/storyblok/Page.vue';
+import { PRODUCTS_PER_PAGE } from '~/utils/config';
 import BaseContainer from '~/components/Base/BaseContainer.vue';
 import ProductList from '~/components/ProductList.vue';
 
@@ -163,8 +177,6 @@ async function getCategories() {
   const { data } = await storyblokApi.get(`cdn/stories/`, {
     version,
     starts_with: 'categories/',
-    // by_uuids: story.uuid,
-    // by_uuids: category.value.uuid,
     excluding_fields: 'products',
   });
   // console.log('data: ', data);
@@ -173,20 +185,49 @@ async function getCategories() {
   // story.data = data.stories;
 }
 
-async function getProducts() {
-  // console.log('state.category: ', state.category);
-  // console.log('state.category.story.uuid: ', state.category.story.uuid);
-  const { data } = await storyblokApi.get('cdn/stories/', {
+async function getProducts(page = 1, searchQuery = '') {
+  const response = await storyblokApi.get('cdn/stories/', {
     version,
-    per_page: 24,
-
+    sort_by: 'content.name:asc',
+    page,
+    per_page: PRODUCTS_PER_PAGE,
+    ...(searchQuery && { search_term: searchQuery }),
     starts_with: 'products/',
-    // resolve_relations: 'Product.category_info',
   });
-  // console.log('data: ', data);
+  // console.log('response: ', response);
 
-  state.products = data;
+  state.products = response;
   // story.data = data.stories;
+}
+
+/**
+ * * pagination
+ */
+const currentPage = ref(1);
+const numberOfPages = computed(() => {
+  if (!state.products) {
+    return null;
+  }
+
+  //* если количество товаров больше количество товаров на страницу - рассчитываем кол-во страниц
+  if (state.products.total > PRODUCTS_PER_PAGE) {
+    const num = Math.ceil(state.products.total / PRODUCTS_PER_PAGE);
+
+    return num;
+  }
+
+  return 1;
+});
+
+async function showPage(page) {
+  if (page === currentPage.value || !page) {
+    return;
+  }
+  // console.log('page: ', page);
+
+  currentPage.value = page;
+
+  await getProducts(page);
 }
 
 // inputSearch
@@ -216,18 +257,10 @@ const filteredDataArray = computed(() =>
 );
 
 function getProductNames() {
-  suggestions.value = state.products.stories.map((story) => story.content.name);
+  suggestions.value = state.products.data.stories.map(
+    (story) => story.content.name
+  );
 }
-
-/* onMounted(async () => {
-  await getCategory();
-  await getProducts();
-
-  getProductNames();
-
-  useStoryblokBridge(state.products.id, (story) => (state.products = story));
-  useStoryblokBridge(state.category.id, (story) => (state.category = story));
-}); */
 
 onMounted(async () => {
   await getProducts();
@@ -242,8 +275,25 @@ onMounted(async () => {
   );
 });
 
+//* поиск продуктов
+async function searchProducts() {
+  // console.log(`search`);
+  /* if (!searchQuery.value) {
+    return;
+  } */
+  currentPage.value = 1;
+  await getProducts(1, searchQuery.value);
+}
+
+//* если значение пустое - возращаем, то что было
+watch(searchQuery, async (newVal) => {
+  if (newVal.length === 0) {
+    await getProducts(currentPage.value || 1);
+  }
+});
+
 const dataToShow = computed(() => {
-  let data = state.products.stories;
+  let data = state.products.data.stories;
   // console.log('data: ', data.slice());
   // let filteredData = null;
 

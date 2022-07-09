@@ -2,6 +2,7 @@ import gsap from 'gsap';
 
 export default function useDialogAnimation() {
   function enter(el, done) {
+    document.querySelector('html').classList.add('!overflow-y-hidden');
     const dialog = el.querySelector('.dialog');
 
     const tl = gsap.timeline({});
@@ -22,6 +23,7 @@ export default function useDialogAnimation() {
   }
 
   function leave(el, done) {
+    document.querySelector('html').classList.remove('!overflow-y-hidden');
     const dialog = el.querySelector('.dialog');
 
     const tl = gsap.timeline({});

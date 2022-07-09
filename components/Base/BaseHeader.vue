@@ -64,19 +64,19 @@ const menuItems = ref([
   },
   {
     id: '1-1',
-    url: '#popular',
+    url: '/#popular',
     text: 'Популярное',
   },
   {
     id: 2,
-    url: '#deliver',
+    url: '/#deliver',
     text: 'Доставка',
   },
-  {
+  /* {
     id: 3,
     url: '#contacts',
     text: 'Контакты',
-  },
+  }, */
   /* {
     id: 4,
     url: '#about',

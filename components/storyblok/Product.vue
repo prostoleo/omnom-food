@@ -2,13 +2,13 @@
   <!-- grid grid-rows-[auto, 1fr] h-full -->
   <div
     v-editable="blok"
-    class="card overflow-hidden grid grid-rows-[auto, 1fr] h-full"
+    class="card-custom overflow-hidden shadow shadow-md shadow-gray-400/30 rounded-md overflow-hidden grid grid-rows-[auto, 1fr] h-full w-full max-w-96"
   >
     <!-- <pre>{{ blok.images[0] }}</pre> -->
     <!-- <pre>{{ blok.images[0].filename }}</pre> -->
 
     <img
-      class="w-full object-cover"
+      class="w-full object-cover max-w-96 max-h-96 aspect-square"
       :src="`${blok.images[0].filename}/m/`"
       :alt="blok.name"
       loading="lazy"
