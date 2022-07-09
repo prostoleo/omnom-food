@@ -55,6 +55,12 @@ export default {
     ],
     '@pinia/nuxt',
     '@aceforth/nuxt-netlify',
+    [
+      'nuxt-purgecss',
+      {
+        mode: 'webpack',
+      },
+    ],
   ],
 
   env: {
@@ -85,7 +91,9 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    extractCSS: true, // extractCSS
+  },
 
   // * для SSG
   generate: {
