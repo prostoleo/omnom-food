@@ -38,6 +38,7 @@
             :alt="item.name"
             width="50"
             height="50"
+            loading="lazy"
           />
           <div
             class="text-with-controlers flex items-center justify-between w-full"

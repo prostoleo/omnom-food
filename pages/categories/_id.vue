@@ -36,6 +36,7 @@
             <!-- @keydown.enter="searchProducts" -->
             <button
               class="p-2 rounded-sm bg-light-300 hover:(bg-yellow-500 text-white)"
+              aria-label="Искать продукты"
               @click="searchProducts"
             >
               <b-icon icon="magnify"></b-icon>

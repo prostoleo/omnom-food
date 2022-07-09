@@ -37,8 +37,8 @@
       :src="blok.bg.filename"
       :alt="blok.bg.alt || blok.title"
       class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-      loading="lazy"
     />
+    <!-- loading="lazy" -->
   </section>
 </template>
 

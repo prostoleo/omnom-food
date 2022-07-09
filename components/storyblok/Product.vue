@@ -9,9 +9,11 @@
 
     <img
       class="w-full object-cover max-w-96 max-h-96 aspect-square"
-      :src="`${blok.images[0].filename}/m/`"
+      :src="`${blok.images[0].filename}/m/394x394/filters:quality(50)`"
       :alt="blok.name"
       loading="lazy"
+      width="384"
+      height="384"
     />
     <!-- grid grid-rows-[20%, 1fr, auto] -->
     <div class="card-body p-3 grid grid-rows-[min-content, 1fr, auto]">

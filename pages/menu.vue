@@ -37,6 +37,7 @@
             <!-- @keydown.enter="searchProducts" -->
             <button
               class="p-2 rounded-sm bg-light-300 hover:(bg-yellow-500 text-white)"
+              aria-label="Искать продукты"
               @click="searchProducts"
             >
               <b-icon icon="magnify"></b-icon>
@@ -156,7 +157,7 @@ const loading = ref(true);
 
 // const { story, fetchState } = useStoryblok('home', {
 //* для компонента menuHero
-const { story, fetchState } = useStoryblok(fullSlug, {
+const { story } = useStoryblok(fullSlug, {
   // version: 'draft',
   // version: 'published',
   version,

@@ -15,10 +15,11 @@
     <img
       card-cover
       class="absolute w-full h-full inset-0 object-cover -z-1 filter brightness-60 transform transition-transform duration-300 scale-100"
-      :src="blok.content.cover.filename"
+      :src="`${blok.content.cover.filename}/m/`"
       :alt="blok.content.title"
       loading="lazy"
     />
+    <!-- :src="blok.content.cover.filename" -->
   </NuxtLink>
   <div v-else class="min-h-[50vh] grid items-center relative">
     <h1 class="text-3xl text-center font-semibold text-white md:(text-5xl)">
@@ -28,10 +29,10 @@
 
     <img
       class="absolute w-full h-full inset-0 object-cover -z-1 filter brightness-60"
-      :src="blok.cover.filename"
+      :src="`${blok.cover.filename}/m/`"
       :alt="blok.title"
-      loading="lazy"
     />
+    <!-- loading="lazy" -->
   </div>
 </template>
 
