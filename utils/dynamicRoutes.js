@@ -16,6 +16,7 @@ export const dynamicRoutes = async () => {
   const routesForCategories = resForCategories.stories.map((story) => {
     return {
       route: `/${story.full_slug}`,
+      payload: story,
     };
   });
   // console.log('routesForCategories: ', routesForCategories);
