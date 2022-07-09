@@ -102,4 +102,12 @@ $link-focus-border: $primary;
 // @import '~bulma/sass/layout/_all.sass';
 // @import '~bulma/sass/utilities/_all.sass';
 
-@import '~buefy/src/scss/buefy';
+// @import '~buefy/src/scss/buefy';
+
+@import '~buefy/src/scss/utils/_all';
+@import '~buefy/src/scss/components/_autocomplete';
+@import '~buefy/src/scss/components/_checkbox';
+@import '~buefy/src/scss/components/_dropdown';
+@import '~buefy/src/scss/components/_icon';
+@import '~buefy/src/scss/components/_loading';
+@import '~buefy/src/scss/components/_select';

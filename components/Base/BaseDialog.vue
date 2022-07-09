@@ -233,45 +233,4 @@ form {
     }
   }
 }
-
-.nested-enter-active,
-.nested-leave-active {
-  transition: all 0.3s ease-in-out;
-}
-/* delay leave of parent element */
-.nested-leave-active {
-  transition-delay: 0.25s;
-}
-
-.nested-enter-from,
-.nested-leave-to {
-  // transform: translateY(30px);
-  opacity: 0;
-}
-
-/* we can also transition nested elements using nested selectors */
-.nested-enter-active .dialog,
-.nested-leave-active .dialog {
-  transition: all 0.3s ease-in-out;
-}
-/* delay enter of nested element */
-.nested-enter-active .dialog {
-  transition-delay: 0.25s;
-}
-
-.nested-enter-from .dialog,
-.nested-leave-to .dialog {
-  transform: translateY(-50%);
-  /*
-  	Hack around a Chrome 96 bug in handling nested opacity transitions.
-    This is not needed in other browsers or Chrome 99+ where the bug
-    has been fixed.
-  */
-  opacity: 0.001;
-}
-.nested-enter-to .dialog,
-.nested-leave-from .dialog {
-  transform: translateY(0%);
-  opacity: 1;
-}
 </style>

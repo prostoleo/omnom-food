@@ -1,3 +1,7 @@
+// import path from 'path';
+// import PurgecssPlugin from 'purgecss-webpack-plugin';
+// import glob from 'glob-all';
+
 import { dynamicRoutes } from './utils/dynamicRoutes';
 
 export default {
@@ -7,14 +11,19 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'omnom',
+    title: 'omnom | Мясные и рыбные продукты и напитки по-домашнему в Томске',
     htmlAttrs: {
       lang: 'ru',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Закажите доставку вкусной домашней еды в Томске. Мы предлагаем свежие мясные и рыбные продукты с доставкой к вашему столу. Приятного аппетита!',
+      },
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/png', href: '/icon.png' }],
@@ -55,12 +64,13 @@ export default {
     ],
     '@pinia/nuxt',
     '@aceforth/nuxt-netlify',
-    [
+    /* [
       'nuxt-purgecss',
       {
-        mode: 'webpack',
+        mode: 'postcss', // webpack | postcss
       },
-    ],
+    ], */
+    // 'nuxt-purgecss',
   ],
 
   env: {
@@ -86,13 +96,27 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en',
+      lang: 'ru',
     },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extractCSS: true, // extractCSS
+    // extractCSS: true, // extractCSS
+    // extend(config, { isDev, isClient }) {
+    //   if (!isDev && isClient) {
+    //     config.plugins.push(
+    //       new PurgecssPlugin({
+    //         paths: glob.sync([
+    //           path.join(__dirname, './pages/**/*.vue'),
+    //           path.join(__dirname, './layouts/**/*.vue'),
+    //           path.join(__dirname, './components/**/*.vue'),
+    //         ]),
+    //         whitelist: ['html', 'body'],
+    //       })
+    //     );
+    //   }
+    // },
   },
 
   // * для SSG
