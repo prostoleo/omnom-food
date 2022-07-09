@@ -4,6 +4,7 @@ import StoryblokClient from 'storyblok-js-client';
 export const dynamicRoutes = async () => {
   const Storyblok = new StoryblokClient({
     accessToken: process.env.STORYBLOK_KEY,
+    // accessToken: process.env.STORYBLOK_PUBLIC_KEY,
   });
 
   const resForCategories = await Storyblok.get(`cdn/stories`, {
@@ -22,6 +23,7 @@ export const dynamicRoutes = async () => {
   // console.log('routesForCategories: ', routesForCategories);
 
   const routes = [...routesForCategories];
+  // console.log('routes: ', routes);
 
   return routes;
 };

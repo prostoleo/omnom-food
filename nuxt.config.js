@@ -94,4 +94,10 @@ export default {
     // * воздаем динамические пути
     routes: dynamicRoutes,
   },
+
+  netlify: {
+    headers: {
+      '/*': ['Access-Control-Allow-Origin: *'],
+    },
+  },
 };
