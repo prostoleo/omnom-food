@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { onMounted, useRouter, useRoute } from '@nuxtjs/composition-api';
+// import { onMounted, useRouter } from '@nuxtjs/composition-api';
 import useScrollToTop from '~/composables/scrollToTop';
 import BaseHeader from '~/components/Base/BaseHeader.vue';
 import BaseFooter from '~/components/Base/BaseFooter.vue';
@@ -57,14 +57,6 @@ const showCart = () => {
   // document.querySelector('html').classList.add('!overflow-y-hidden');
   cartStore.showCart();
 };
-const route = useRoute();
-// console.log('route: ', route);
-const router = useRouter();
-
-onMounted(() => {
-  // const
-  // route.value.hash.length > 0 && router.replace({ hash: route.value.hash });
-});
 </script>
 
 <style lang="scss" scoped>

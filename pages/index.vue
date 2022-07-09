@@ -48,6 +48,7 @@ import {
   useRoute,
   useAsync,
   onMounted,
+  nextTick,
 } from '@nuxtjs/composition-api';
 
 // import StoryblokClient from 'storyblok-js-client';

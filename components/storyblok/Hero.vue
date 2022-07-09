@@ -2,7 +2,7 @@
   <section
     v-editable="blok"
     hero-section
-    class="relative min-h-screen grid items-center"
+    class="relative min-h-screen flex items-center justify-center"
   >
     <BaseContainer class="text-white">
       <h1
@@ -33,11 +33,28 @@
       </div>
     </BaseContainer>
 
-    <img
-      :src="blok.bg.filename"
-      :alt="blok.bg.alt || blok.title"
-      class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-    />
+    <picture>
+      <source
+        v-for="(width, index) in WIDTH_FOR_IMG_SOURCES"
+        :key="width"
+        :media="
+          WIDTH_FOR_IMG_SOURCES.length !== index + 1
+            ? `(max-width: ${width}px)`
+            : `(min-width: ${width}px)`
+        "
+        :srcset="
+          WIDTH_FOR_IMG_SOURCES.length !== index + 1
+            ? `${blok.bg.filename}/m/${width}x0`
+            : `${blok.bg.filename}/m/`
+        "
+      />
+
+      <img
+        :src="`${blok.bg.filename}/m/`"
+        :alt="blok.bg.alt || blok.title"
+        class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
+      />
+    </picture>
     <!-- loading="lazy" -->
   </section>
 </template>
@@ -48,6 +65,7 @@ import { useStoryblokApi } from '@storyblok/nuxt-2';
 import BaseContainer from '../Base/BaseContainer.vue';
 import BaseButtonPrimary from '../Base/BaseButtonPrimary.vue';
 import BaseButtonSecondary from '../Base/BaseButtonSecondary.vue';
+import { WIDTH_FOR_IMG_SOURCES } from '~/utils/config';
 // console.log('useStoryblokApi: ', useStoryblokApi);
 
 const props = defineProps({

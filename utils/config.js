@@ -1,1 +1,2 @@
 export const PRODUCTS_PER_PAGE = 24;
+export const WIDTH_FOR_IMG_SOURCES = [450, 650, 767, 1023, 1024];
