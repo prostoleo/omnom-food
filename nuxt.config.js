@@ -1,3 +1,5 @@
+import { dynamicRoutes } from './utils/dynamicRoutes';
+
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -6,6 +8,9 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'omnom',
+    htmlAttrs: {
+      lang: 'ru',
+    },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -80,4 +85,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  // * для SSG
+  generate: {
+    fallback: true,
+
+    // * воздаем динамические пути
+    routes: dynamicRoutes,
+  },
 };
