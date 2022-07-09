@@ -54,6 +54,7 @@ export default {
       },
     ],
     '@pinia/nuxt',
+    '@aceforth/nuxt-netlify',
   ],
 
   env: {
