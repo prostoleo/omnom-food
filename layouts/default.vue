@@ -63,7 +63,7 @@ const router = useRouter();
 
 onMounted(() => {
   // const
-  route.value.hash.length > 0 && router.replace({ hash: route.value.hash });
+  // route.value.hash.length > 0 && router.replace({ hash: route.value.hash });
 });
 </script>
 
