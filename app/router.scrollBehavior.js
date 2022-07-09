@@ -16,13 +16,18 @@ export default async function (to, _, savedPosition) {
   };
 
   if (to.hash) {
-    console.log('to.hash: ', to.hash);
+    // console.log('to.hash: ', to.hash);
     const el = await findEl(to.hash.slice(1));
 
+    const mainHeaderEl = document.querySelector('[main-header]');
+    // console.log('mainHeaderEl: ', mainHeaderEl);
+
+    const yCoord = el.offsetTop - mainHeaderEl.getBoundingClientRect().height;
+
     if ('scrollBehavior' in document.documentElement.style) {
-      return window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+      return window.scrollTo({ top: yCoord, behavior: 'smooth' });
     } else {
-      return window.scrollTo(0, el.offsetTop);
+      return window.scrollTo(0, yCoord);
     }
   }
 

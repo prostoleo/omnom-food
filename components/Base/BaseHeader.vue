@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-dark-800 py-3 isolation">
+  <header class="bg-dark-800 py-3 isolation" main-header>
     <BaseContainer class="flex items-center justify-between text-white">
       <BaseLogo />
 
