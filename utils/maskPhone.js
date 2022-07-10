@@ -4,7 +4,7 @@
 /* eslint-disable no-var */
 export default function maskPhone() {
   [].forEach.call(document.querySelectorAll('.tel'), function (input) {
-    // console.log('input: ', input);
+    console.log('input: ', input);
     var keyCode;
     function mask(event) {
       event.keyCode && (keyCode = event.keyCode);

@@ -37,7 +37,7 @@
                   class="w-full border-b p-2"
                   :class="{ active: name.val.length > 0 }"
                   type="text"
-                  @input.self="name.touched = true"
+                  @blur="name.touched = true"
                 />
                 <label
                   class="absolute left-2 top-2 pointer-events-none transform translate-y-0 transition-all duration-150"
@@ -54,10 +54,10 @@
                 <input
                   id="phone"
                   v-model.trim="phone.val"
-                  class="w-full border-b p-2 tel"
+                  class="tel w-full border-b p-2"
                   :class="{ active: phone.val.length > 0 }"
                   type="text"
-                  @input.self="phone.touched = true"
+                  @blur="phone.touched = true"
                 />
                 <label
                   class="absolute left-2 top-2 pointer-events-none transition-all transform translate-y-0 transition-all duration-150"
@@ -67,7 +67,7 @@
                 <small
                   v-if="phoneError"
                   class="absolute text-sm text-red-400 pl-2"
-                  >Введите свой номер телефон</small
+                  >Введите свой номер телефона</small
                 >
               </div>
             </div>
@@ -101,10 +101,16 @@ import {
   ToastProgrammatic as Toast,
   // LoadingProgrammatic as Loading,
 } from 'buefy';
-import { ref, reactive, onMounted, computed } from '@nuxtjs/composition-api';
+import {
+  ref,
+  reactive,
+  onMounted,
+  computed,
+  // watch,
+} from '@nuxtjs/composition-api';
 import BaseButtonPrimary from './BaseButtonPrimary.vue';
 import useDialogAnimation from '~/composables/animation/useDialogAnimation';
-import maskPhone from '~/utils/maskPhone';
+// import maskPhone from '~/utils/maskPhone';
 
 // const showDialog = ref(false);
 const props = defineProps({
@@ -130,7 +136,19 @@ const agreeWithPolicy = ref(false);
 const isLoading = ref(false);
 
 const nameError = computed(() => name.val.length === 0 && name.touched);
-const phoneError = computed(() => phone.val.length !== 18 && phone.touched);
+/**
+ * * если maskPhone работал бы
+ */
+// const phoneError = computed(() => phone.val.length !== 18 && phone.touched);
+/**
+ * * без рабочего maskPhone - проверяем есть ли присутсвуют только цифры, пробелы, +, - и скобки
+ */
+const phoneError = computed(() => {
+  const regexp = /^[0-9" "\-+()]+$/gm;
+  const regExpTest = regexp.test(phone.val);
+  return !regExpTest && phone.touched;
+  // phone.val.match('/^[0-9" "-+()]+$/') && phone.touched
+});
 // const agreeError = computed(() => !agreeWithPolicy.value);
 
 const totalError = computed(
@@ -138,8 +156,29 @@ const totalError = computed(
 );
 
 onMounted(() => {
-  maskPhone();
+  // maskPhone();
 });
+/* const showDialogComputed = computed(() => props.showDialog);
+
+watch(showDialogComputed, (newVal) => {
+  if (newVal) {
+    // newVal
+    console.log('newVal: ', newVal);
+    maskPhone();
+  }
+}); */
+
+function setToDefault() {
+  name.val = '';
+  name.touched = false;
+  name.error = false;
+
+  phone.val = '';
+  phone.touched = false;
+  phone.error = false;
+
+  agreeWithPolicy.value = false;
+}
 
 const { enter, leave } = useDialogAnimation();
 
@@ -203,6 +242,10 @@ async function submitHandler() {
       duration: 5000,
       type: 'is-success',
     });
+    setTimeout(() => {
+      emit('close-dialog');
+    }, 0);
+    setToDefault();
   } catch (error) {
     console.log('error: ', error);
     isLoading.value = false;
@@ -213,9 +256,6 @@ async function submitHandler() {
       type: 'is-danger',
     });
   } finally {
-    setTimeout(() => {
-      emit('close-dialog');
-    }, 0);
   }
 }
 </script>

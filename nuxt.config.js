@@ -98,6 +98,23 @@ export default {
     manifest: {
       lang: 'ru',
     },
+    icon: {
+      source: '~/static/icon.png',
+    },
+    meta: {
+      name: "omnom | Мясные и рыбные продукты и напитки по-домашнему в Томске'",
+      author: 'Leonid Radostnov, Леонид Радостнов, prostoleo, prostoleo-dev',
+      description:
+        'Закажите доставку вкусной домашней еды в Томске. Мы предлагаем свежие мясные и рыбные продукты с доставкой к вашему столу. Приятного аппетита!',
+      theme_color: '#f59e0b',
+      lang: 'ru',
+      ogHost: 'https://omnom-food.netlify.app/',
+      ogImage: {
+        path: '~/static/icon.png',
+        width: 512,
+        height: 512,
+      },
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
