@@ -10,6 +10,7 @@ export const useCartStore = defineStore('cartStore', {
       // totalSum: 0,
       // totalGoods: 0,
       isCartShown: false,
+      isOrderProcessShown: false,
       cartItems: JSON.parse(localStorage.getItem(LS_CART_ITEMS_KEY)) ?? [],
     };
   },
@@ -17,6 +18,9 @@ export const useCartStore = defineStore('cartStore', {
   getters: {
     getIsCartShown: (state) => {
       return state.isCartShown;
+    },
+    getIsOrderProcessShown: (state) => {
+      return state.isOrderProcessShown;
     },
 
     getCartItems: (state) => {
@@ -103,6 +107,14 @@ export const useCartStore = defineStore('cartStore', {
         item.quantity++;
         return item;
       });
+    },
+
+    showOrderProcess() {
+      this.isOrderProcessShown = true;
+    },
+
+    hideOrderProcess() {
+      this.isOrderProcessShown = false;
     },
   },
 });
