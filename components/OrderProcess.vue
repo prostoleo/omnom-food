@@ -2,7 +2,7 @@
   <!-- translate-x-full -->
   <!-- :class="{ '!translate-x-0': orderProcessStore.getIsOrderProcessShown }" -->
   <div
-    class="order fixed right-0 top-0 bottom-0 min-w-xs w-full bg-white rounded-sm isolate text-dark-800 grid overflow-hidden translate-x-full transform duration-200"
+    class="order fixed right-0 top-0 bottom-0 min-w-xs w-full bg-white rounded-sm isolate text-dark-800 grid overflow-hidden translate-x-full transform duration-200 lg:(duration-300) xl:(duration-500)"
     :class="{ '!translate-x-0': cartStore.getIsOrderProcessShown }"
     style="z-index: 101"
   >
@@ -97,6 +97,7 @@
 
           <div class="grid grid-cols-2 gap-4">
             <b-radio-button
+              :key="PAYMENT_METHODS.ONLINE"
               v-model="chosenPaymentMethod"
               :native-value="PAYMENT_METHODS.ONLINE"
               type="is-primary is-light is-outlined"
@@ -106,12 +107,49 @@
             </b-radio-button>
 
             <b-radio-button
+              :key="PAYMENT_METHODS.WITH_DELIVERY"
               v-model="chosenPaymentMethod"
               :native-value="PAYMENT_METHODS.WITH_DELIVERY"
               type="is-primary is-light is-outlined"
             >
               <!-- <b-icon icon="package-check"></b-icon> -->
               <span>{{ PAYMENT_METHODS.WITH_DELIVERY }}</span>
+            </b-radio-button>
+          </div>
+        </div>
+        <div
+          v-if="chosenPaymentMethod === PAYMENT_METHODS.ONLINE"
+          class="payment-online mt-4"
+        >
+          <h3>Выбора метода оплаты онлайн</h3>
+
+          <!-- <label
+          ><input type="radio" name="paymentType" value="PC" />ЮMoney</label
+        >
+        <label
+          ><input type="radio" name="paymentType" value="AC" />Банковской
+          картой</label
+        > -->
+
+          <div class="grid grid-cols-2 gap-4">
+            <b-radio-button
+              :key="ONLINE_PAYMENT_METHODS.YOU_MONEY.LABEL"
+              v-model="chosenOnlinePaymentMethods"
+              :native-value="ONLINE_PAYMENT_METHODS.YOU_MONEY.VALUE"
+              type="is-primary is-light is-outlined"
+            >
+              <!-- <b-icon icon="cash-sync"></b-icon> -->
+              <span>{{ ONLINE_PAYMENT_METHODS.YOU_MONEY.LABEL }}</span>
+            </b-radio-button>
+
+            <b-radio-button
+              :key="ONLINE_PAYMENT_METHODS.BANK_CARD.LABEL"
+              v-model="chosenOnlinePaymentMethods"
+              :native-value="ONLINE_PAYMENT_METHODS.BANK_CARD.VALUE"
+              type="is-primary is-light is-outlined"
+            >
+              <!-- <b-icon icon="package-check"></b-icon> -->
+              <span>{{ ONLINE_PAYMENT_METHODS.BANK_CARD.LABEL }}</span>
             </b-radio-button>
           </div>
         </div>
@@ -128,12 +166,71 @@
           </span>
         </div>
 
+        <!-- v-if="chosenPaymentMethod === PAYMENT_METHODS.WITH_DELIVERY" -->
         <BaseButtonPrimary
+          v-if="chosenPaymentMethod !== PAYMENT_METHODS.ONLINE"
           class="mt-[1.5em] block w-full !font-bold mb-0"
           aria-label="К оплате"
+          @click.native="submitOrder"
         >
           Подтвердить заказ
         </BaseButtonPrimary>
+        <form
+          v-if="chosenPaymentMethod === PAYMENT_METHODS.ONLINE"
+          id="hidden-inputs"
+          ref="hiddenForm"
+          method="POST"
+          action="https://yoomoney.ru/quickpay/confirm.xml"
+          @submit.prevent="submitOrder"
+        >
+          <!-- @submit.prevent="submitOrder" -->
+          <input type="hidden" name="receiver" :value="WALLET_ID" />
+          <input
+            type="hidden"
+            name="formcomment"
+            value="Заказ из магазина ОМНОМ"
+          />
+          <input
+            type="hidden"
+            name="short-dest"
+            value="Заказ из магазина ОМНОМ"
+          />
+          <input type="hidden" name="label" :value="`$${orderId}`" />
+          <input type="hidden" name="quickpay-form" value="shop" />
+          <input
+            type="hidden"
+            name="targets"
+            :value="`оплата заказа ${orderId}`"
+          />
+          <input type="hidden" name="sum" :value="total" data-type="number" />
+          <input type="hidden" name="need-fio" value="true" />
+          <input type="hidden" name="need-email" value="true" />
+          <input type="hidden" name="need-phone" value="true" />
+          <input type="hidden" name="need-address" value="true" />
+          <input type="hidden" name="successUrl" :value="successUrl" />
+          <label class="hidden"
+            ><input
+              type="radio"
+              name="paymentType"
+              value="PC"
+              :checked="chosenOnlinePaymentMethods === 'PC'"
+            />ЮMoney</label
+          >
+          <label class="hidden"
+            ><input
+              type="radio"
+              name="paymentType"
+              value="AC"
+              :checked="chosenOnlinePaymentMethods === 'AC'"
+            />Банковской картой</label
+          >
+          <input
+            class="px-[1.25em] py-[0.5em] inline-block rounded-md bg-yellow-500 border border-transparent text-dark-800 font-semibold md:(text-lg) lg:(text-2xl) hover:(opacity-80) mt-[1.5em] block w-full !font-bold mb-0 cursor-pointer"
+            type="submit"
+            value="Оплатить"
+          />
+          <!-- @click="submitOrder" -->
+        </form>
 
         <small class="block text-center my-1 mx-auto">
           Нажимая на кнопку, я даю согласие с
@@ -144,24 +241,128 @@
     <!-- </div> -->
     <!-- </transition> -->
     <!-- </div> -->
+    <b-loading
+      v-if="isLoading"
+      v-model="isLoading"
+      :is-full-page="true"
+    ></b-loading>
+
+    <!-- <div
+      class="fixed inset-0 bg-white flex items-center justify-center text-black hidden"
+    >
+      <form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">
+        <input type="hidden" name="receiver" :value="WALLET_ID" />
+        <input
+          type="hidden"
+          name="formcomment"
+          value="Заказ из магазина ОМНОМ"
+        />
+        <input
+          type="hidden"
+          name="short-dest"
+          value="Заказ из магазина ОМНОМ"
+        />
+        <input type="hidden" name="label" :value="`$${orderId}`" />
+        <input type="hidden" name="quickpay-form" value="shop" />
+        <input
+          type="hidden"
+          name="targets"
+          :value="`оплата заказа ${orderId}`"
+        />
+        <input type="hidden" name="sum" :value="total" data-type="number" />
+        <input type="hidden" name="need-fio" value="true" />
+        <input type="hidden" name="need-email" value="true" />
+        <input type="hidden" name="need-phone" value="true" />
+        <input type="hidden" name="need-address" value="true" />
+        <label
+          ><input type="radio" name="paymentType" value="PC" />ЮMoney</label
+        >
+        <label
+          ><input type="radio" name="paymentType" value="AC" />Банковской
+          картой</label
+        >
+        <input type="submit" value="Оплатить" />
+      </form>
+    </div> -->
   </div>
 </template>
 
 <script setup>
-import { computed, reactive, ref } from '@nuxtjs/composition-api';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  ToastProgrammatic as Toast,
+  // LoadingProgrammatic as Loading,
+} from 'buefy';
+
+import {
+  computed,
+  reactive,
+  ref,
+  useRoute,
+  watch,
+} from '@nuxtjs/composition-api';
 import BaseButtonPrimary from './Base/BaseButtonPrimary.vue';
 import { useCartStore } from '~/store/cart';
 import priceFormatter from '~/utils/priceFormatter';
 import { REG_EXP_PHONE } from '~/utils/regexpPhone';
 
+const isLoading = ref(false);
 const cartStore = useCartStore();
+
+const route = useRoute();
+
+// const successUrl = `${window.location.href}/?payment=success`;
+// console.log('window.location: ', window.location);
+const successUrl = `${window.location.origin}/?payment=success`;
+console.log('successUrl: ', successUrl);
+
+const hiddenForm = ref();
+// const inputNames = ['receiver', 'show']
+let hiddenData = reactive({});
+watch(hiddenForm, (val) => {
+  if (val) {
+    console.log('hiddenForm: ', hiddenForm);
+
+    const inputs = Array.from(
+      hiddenForm.value.querySelectorAll('input[type="hidden"]')
+    );
+    // console.log('inputs: ', inputs);
+    const data = inputs.reduce((obj, input) => {
+      // console.log('obj: ', obj);
+      // console.log('input.name: ', input.name);
+      // console.log('input.value: ', input.value);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const name = input.name;
+
+      obj[name] = input.value;
+      return obj;
+    }, {});
+    console.log('data: ', data);
+
+    hiddenData = data;
+  }
+});
 
 const PAYMENT_METHODS = {
   ONLINE: 'Онлайн',
   WITH_DELIVERY: `При получении`,
 };
 
+const ONLINE_PAYMENT_METHODS = {
+  YOU_MONEY: {
+    VALUE: 'PC',
+    LABEL: 'ЮMoney',
+  },
+  BANK_CARD: {
+    VALUE: 'AC',
+    LABEL: `Банковской картой`,
+  },
+};
+
+const WALLET_ID = process.env.YOU_MONEY_WALLET_ID;
+
 const chosenPaymentMethod = ref('');
+const chosenOnlinePaymentMethods = ref('');
 
 const name = reactive({
   val: '',
@@ -185,6 +386,19 @@ const email = reactive({
   val: '',
   error: false,
   touched: false,
+});
+
+const orderId = ref(uuidv4());
+// console.log('orderId: ', orderId);
+
+const isOrderShownComputed = computed(() => cartStore.getIsOrderProcessShown);
+
+watch(isOrderShownComputed, (newVal, oldVal) => {
+  // console.log('newVal: ', newVal);
+  if (newVal && newVal !== oldVal) {
+    orderId.value = uuidv4();
+    // console.log('orderId.value: ', orderId.value);
+  }
 });
 
 const nameError = computed(() => {
@@ -214,20 +428,121 @@ const totalError = computed(() => {
     phoneError.value ||
     addressError.value ||
     emailError.value ||
-    chosenPaymentMethod.value
+    !chosenPaymentMethod.value
   );
 });
+
+const someInputHasNoValue = computed(() => {
+  const arrToCheck =
+    chosenPaymentMethod.value === PAYMENT_METHODS.WITH_DELIVERY
+      ? [name.val, phone.val, address.val, chosenPaymentMethod.value]
+      : [
+          name.val,
+          phone.val,
+          address.val,
+          chosenPaymentMethod.value,
+          chosenOnlinePaymentMethods.value,
+        ];
+
+  return arrToCheck.some((v) => {
+    // console.log('v: ', v);
+    return v.length === 0;
+  });
+});
+
+const total = cartStore.getCartItems.reduce(
+  (acc, item) => acc + item.price * item.quantity,
+  0
+);
+// console.log('total: ', total);
 
 function closeOrderAndCart() {
   cartStore.hideOrderProcess();
   cartStore.hideCart();
 }
+
+// eslint-disable-next-line require-await
+async function submitOrder() {
+  try {
+    // console.log('everyInputHasValue.value: ', everyInputHasValue.value);
+    console.log('someInputHasNoValue.value: ', someInputHasNoValue.value);
+    if (totalError.value || someInputHasNoValue.value) {
+      Toast.open({
+        message: `Заполните обязательные поля, а также выберите способ оплаты`,
+        pauseOnHover: true,
+        duration: 5000,
+        type: 'is-danger',
+      });
+      return;
+    }
+
+    const cartItems = JSON.parse(JSON.stringify(cartStore.$state.cartItems));
+    // console.log('cartItems: ', cartItems);
+
+    const orderData = {
+      orderId: orderId.value,
+      name: name.val,
+      phone: phone.val,
+      address: address.val,
+      ...(email.val && { email: email.val }),
+      cartItems,
+      subject: `Новый заказ с сайта ${window.location.href}`,
+      fromWebsite: window.location.href,
+    };
+    console.log('orderData: ', orderData);
+
+    isLoading.value = true;
+
+    const response = await fetch(process.env.YANDEX_ORDER_SUBMIT, {
+      method: 'POST',
+      headers: {
+        Accept: '/',
+        'Content-Type': 'text/plain',
+      },
+      body: JSON.stringify(orderData),
+    });
+    console.log('response: ', response);
+
+    if (!response.ok) {
+      throw new Error(response.message);
+    }
+
+    if (chosenPaymentMethod.value === PAYMENT_METHODS.WITH_DELIVERY) {
+      isLoading.value = false;
+
+      Toast.open({
+        message: `Ваш заказ принят на обработку. С Вами свяжутся как можно скорее`,
+        pauseOnHover: true,
+        duration: 5000,
+        type: 'is-success',
+      });
+      cartStore.removeItemsFromLocalStorage();
+      cartStore.$reset();
+    }
+
+    if (chosenPaymentMethod.value === PAYMENT_METHODS.ONLINE) {
+      isLoading.value = false;
+
+      hiddenForm.value.submit();
+    }
+  } catch (error) {
+    console.log(error);
+    isLoading.value = false;
+
+    Toast.open({
+      message: `Упс, произошла ошибка. Пожалуйста, попробуйте позже`,
+      pauseOnHover: true,
+      duration: 5000,
+      type: 'is-danger',
+    });
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .container {
-  // max-width: 768px !important;
-  @apply max-w-2xl;
+  max-width: 768px !important;
+  // @apply max-w-2xl;
 }
 
 .for-input {

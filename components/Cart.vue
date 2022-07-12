@@ -103,7 +103,9 @@
         <BaseButtonPrimary
           class="mt-[1.5em] block w-full !font-bold"
           aria-label="К оплате"
-          @click.native="cartStore.showOrderProcess()"
+          @click.native="
+            cartStore.getCartItems.length > 0 && cartStore.showOrderProcess()
+          "
         >
           Оплатить
         </BaseButtonPrimary>

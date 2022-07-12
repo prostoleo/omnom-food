@@ -19,6 +19,9 @@
     </div> -->
   <!-- <div v-else-if="!fetchState.pending"> -->
   <div v-else-if="!fetchState.pending">
+    <!-- <NuxtLink class="bg-red-500 p-2 text-white" to="/?payment=success"
+      >red</NuxtLink
+    > -->
     <!-- <pre class="bg-yellow-200">{{ story }}</pre> -->
     <component
       :is="story.content.component"
@@ -49,6 +52,8 @@ import {
   useAsync,
   onMounted,
   nextTick,
+  useRouter,
+  watch,
 } from '@nuxtjs/composition-api';
 
 // import StoryblokClient from 'storyblok-js-client';
@@ -57,7 +62,9 @@ import {
   useStoryblokApi,
   useStoryblokBridge,
 } from '@storyblok/nuxt-2';
+import { ToastProgrammatic as Toast } from 'buefy';
 import Page from '~/components/storyblok/Page.vue';
+import { useCartStore } from '~/store/cart';
 
 const loading = ref(false);
 
@@ -71,9 +78,40 @@ console.log('cv: ', cv); */
 const context = useContext();
 // console.log('context: ', context);
 const route = useRoute();
+console.log('route: ', route);
 // console.log('route: ', route);
-// const router = useRouter();
+const router = useRouter();
+
 // console.log('router: ', router);
+const cartStore = useCartStore();
+
+watch(
+  route,
+  (newVal) => {
+    console.log('newVal: ', newVal);
+    const duration = 5000;
+
+    if (newVal?.query?.payment === 'success') {
+      console.log('cartStore: ', cartStore);
+      cartStore.removeItemsFromLocalStorage();
+      cartStore.$reset();
+
+      Toast.open({
+        message: `Ваш заказ принят на обработку. С Вами свяжутся как можно скорее`,
+        pauseOnHover: true,
+        duration,
+        type: 'is-success',
+      });
+
+      setTimeout(() => {
+        router.replace({ query: null });
+      }, duration);
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 const version =
   context.query._storyblok || context.isDev ? 'draft' : 'published';

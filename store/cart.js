@@ -116,5 +116,9 @@ export const useCartStore = defineStore('cartStore', {
     hideOrderProcess() {
       this.isOrderProcessShown = false;
     },
+
+    removeItemsFromLocalStorage() {
+      localStorage.removeItem(LS_CART_ITEMS_KEY);
+    },
   },
 });

@@ -19,7 +19,7 @@
     </button>
     <button
       class="fixed block !m-0 bottom-5 right-3 p-3 rounded-md bg-yellow-500 shadow shadow-lg shadow-light-200/40 overflow-visible text-dark transition transition-all"
-      aria-label="переместиться наверх страницы"
+      aria-label="открыть корзину"
       @click="showCart"
     >
       <b-icon icon="cart-outline"></b-icon>
