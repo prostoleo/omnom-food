@@ -71,7 +71,14 @@ export default {
       },
     ], */
     // 'nuxt-purgecss',
+    '@nuxt/image',
   ],
+
+  image: {
+    storyblok: {
+      baseURL: 'https://a.storyblok.com',
+    },
+  },
 
   env: {
     YANDEX_FUNC_SUBMIT: process.env.YANDEX_FUNC_SUBMIT,
