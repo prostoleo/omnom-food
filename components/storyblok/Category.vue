@@ -43,18 +43,18 @@
         "
       />
 
-      <!-- <img
+      <img
         :src="`${blok.cover.filename}/m/`"
         :alt="blok.title"
         class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-      /> -->
-      <NuxtImg
+      />
+      <!-- <NuxtImg
         preload
         provider="storyblok"
         :src="`${blok.cover.filename}/m/`"
         :alt="blok.title"
         class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-      />
+      /> -->
     </picture>
 
     <!-- <img

@@ -33,17 +33,10 @@
       />
 
       
-      <!-- <img
+      <img
         :src="blok.image.filename"
       :alt="blok.image.alt || blok.title"
       class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-      /> -->
-      <NuxtImg
-        preload
-        provider="storyblok"
-        :src="blok.image.filename"
-        :alt="blok.image.alt || blok.title"
-        class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
       />
     </picture>
 

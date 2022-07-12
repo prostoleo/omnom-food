@@ -49,18 +49,18 @@
         "
       />
 
-      <!-- <img
+      <img
         :src="`${blok.bg.filename}/m/`"
         :alt="blok.bg.alt || blok.title"
         class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-      /> -->
-      <NuxtImg
+      />
+      <!-- <NuxtImg
         preload
         provider="storyblok"
         :src="`${blok.bg.filename}/m/`"
         :alt="blok.bg.alt || blok.title"
         class="absolute inset-0 object-cover w-full h-full -z-1 filter brightness-60"
-      />
+      /> -->
     </picture>
     <!-- loading="lazy" -->
   </section>
