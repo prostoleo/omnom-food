@@ -58,7 +58,7 @@ defineProps({
 const showDialog = ref(false);
 
 const openDialog = () => {
-  console.log(`open`);
+  // console.log(`open`);
   showDialog.value = true;
 };
 const closeDialog = () => {

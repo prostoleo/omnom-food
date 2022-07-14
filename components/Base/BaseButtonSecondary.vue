@@ -30,7 +30,7 @@ defineProps({
 const emit = defineEmits(['click-btn']);
 
 const clickHandler = () => {
-  console.log(`click`);
+  // console.log(`click`);
   emit('click-btn');
 };
 </script>

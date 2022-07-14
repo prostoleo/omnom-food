@@ -59,8 +59,8 @@ const props = defineProps({
 const cartStore = useCartStore();
 
 function addToCart() {
-  console.log(`add to cart`);
-  console.log('blok: ', props.blok);
+  // console.log(`add to cart`);
+  // console.log('blok: ', props.blok);
   const goodData = {
     id: props.blok._uid,
     name: props.blok.name,

@@ -1,12 +1,9 @@
 <template>
-  <!-- translate-x-full -->
-  <!-- :class="{ '!translate-x-0': orderProcessStore.getIsOrderProcessShown }" -->
   <div
     class="order fixed right-0 top-0 bottom-0 min-w-xs w-full bg-white rounded-sm isolate text-dark-800 grid overflow-hidden translate-x-full transform duration-200 lg:(duration-300) xl:(duration-500)"
     :class="{ '!translate-x-0': cartStore.getIsOrderProcessShown }"
     style="z-index: 101"
   >
-    <!-- <div class="container mx-auto !max-w-2xl w-full h-full order"> -->
     <header class="order__header border-b border-solid border-gray-200 p-2">
       <div class="container flex items-center justify-between">
         <div class="inline-flex items-center gap-2">
@@ -123,14 +120,6 @@
         >
           <h3>Выбора метода оплаты онлайн</h3>
 
-          <!-- <label
-          ><input type="radio" name="paymentType" value="PC" />ЮMoney</label
-        >
-        <label
-          ><input type="radio" name="paymentType" value="AC" />Банковской
-          картой</label
-        > -->
-
           <div class="grid grid-cols-2 gap-4">
             <b-radio-button
               :key="ONLINE_PAYMENT_METHODS.YOU_MONEY.LABEL"
@@ -238,52 +227,11 @@
         </small>
       </div>
     </footer>
-    <!-- </div> -->
-    <!-- </transition> -->
-    <!-- </div> -->
     <b-loading
       v-if="isLoading"
       v-model="isLoading"
       :is-full-page="true"
     ></b-loading>
-
-    <!-- <div
-      class="fixed inset-0 bg-white flex items-center justify-center text-black hidden"
-    >
-      <form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">
-        <input type="hidden" name="receiver" :value="WALLET_ID" />
-        <input
-          type="hidden"
-          name="formcomment"
-          value="Заказ из магазина ОМНОМ"
-        />
-        <input
-          type="hidden"
-          name="short-dest"
-          value="Заказ из магазина ОМНОМ"
-        />
-        <input type="hidden" name="label" :value="`$${orderId}`" />
-        <input type="hidden" name="quickpay-form" value="shop" />
-        <input
-          type="hidden"
-          name="targets"
-          :value="`оплата заказа ${orderId}`"
-        />
-        <input type="hidden" name="sum" :value="total" data-type="number" />
-        <input type="hidden" name="need-fio" value="true" />
-        <input type="hidden" name="need-email" value="true" />
-        <input type="hidden" name="need-phone" value="true" />
-        <input type="hidden" name="need-address" value="true" />
-        <label
-          ><input type="radio" name="paymentType" value="PC" />ЮMoney</label
-        >
-        <label
-          ><input type="radio" name="paymentType" value="AC" />Банковской
-          картой</label
-        >
-        <input type="submit" value="Оплатить" />
-      </form>
-    </div> -->
   </div>
 </template>
 
@@ -298,8 +246,8 @@ import {
   computed,
   reactive,
   ref,
-  useRoute,
   watch,
+  useRoute,
 } from '@nuxtjs/composition-api';
 import BaseButtonPrimary from './Base/BaseButtonPrimary.vue';
 import { useCartStore } from '~/store/cart';
@@ -311,17 +259,15 @@ const cartStore = useCartStore();
 
 const route = useRoute();
 
-// const successUrl = `${window.location.href}/?payment=success`;
-// console.log('window.location: ', window.location);
 const successUrl = `${window.location.origin}/?payment=success`;
-console.log('successUrl: ', successUrl);
+// console.log('successUrl: ', successUrl);
 
 const hiddenForm = ref();
 // const inputNames = ['receiver', 'show']
 let hiddenData = reactive({});
 watch(hiddenForm, (val) => {
   if (val) {
-    console.log('hiddenForm: ', hiddenForm);
+    // console.log('hiddenForm: ', hiddenForm);
 
     const inputs = Array.from(
       hiddenForm.value.querySelectorAll('input[type="hidden"]')
@@ -337,7 +283,7 @@ watch(hiddenForm, (val) => {
       obj[name] = input.value;
       return obj;
     }, {});
-    console.log('data: ', data);
+    // console.log('data: ', data);
 
     hiddenData = data;
   }
@@ -465,7 +411,7 @@ function closeOrderAndCart() {
 async function submitOrder() {
   try {
     // console.log('everyInputHasValue.value: ', everyInputHasValue.value);
-    console.log('someInputHasNoValue.value: ', someInputHasNoValue.value);
+    // console.log('someInputHasNoValue.value: ', someInputHasNoValue.value);
     if (totalError.value || someInputHasNoValue.value) {
       Toast.open({
         message: `Заполните обязательные поля, а также выберите способ оплаты`,
@@ -489,7 +435,7 @@ async function submitOrder() {
       subject: `Новый заказ с сайта ${window.location.href}`,
       fromWebsite: window.location.href,
     };
-    console.log('orderData: ', orderData);
+    // console.log('orderData: ', orderData);
 
     isLoading.value = true;
 
@@ -501,7 +447,7 @@ async function submitOrder() {
       },
       body: JSON.stringify(orderData),
     });
-    console.log('response: ', response);
+    // console.log('response: ', response);
 
     if (!response.ok) {
       throw new Error(response.message);

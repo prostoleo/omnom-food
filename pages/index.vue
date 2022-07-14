@@ -88,11 +88,11 @@ const cartStore = useCartStore();
 watch(
   route,
   (newVal) => {
-    console.log('newVal: ', newVal);
+    // console.log('newVal: ', newVal);
     const duration = 5000;
 
     if (newVal?.query?.payment === 'success') {
-      console.log('cartStore: ', cartStore);
+      // console.log('cartStore: ', cartStore);
       cartStore.removeItemsFromLocalStorage();
       cartStore.$reset();
 
