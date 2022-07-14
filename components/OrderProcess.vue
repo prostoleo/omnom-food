@@ -440,6 +440,7 @@ async function submitOrder() {
       subject: `Новый заказ с сайта ${window.location.origin}`,
       fromWebsite: window.location.origin,
     };
+
     // console.log('orderData: ', orderData);
 
     isLoading.value = true;
