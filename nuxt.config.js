@@ -89,8 +89,8 @@ export default {
     STORYBLOK_PUBLIC_KEY: process.env.STORYBLOK_PUBLIC_KEY,
     YANDEX_FUNC_SUBMIT: process.env.YANDEX_FUNC_SUBMIT,
     YANDEX_ORDER_SUBMIT: process.env.YANDEX_ORDER_SUBMIT,
-    YOU_MONEY_WALLET_ID: process.env.YOU_MONEY_WALLET_ID
-  }
+    YOU_MONEY_WALLET_ID: process.env.YOU_MONEY_WALLET_ID,
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
