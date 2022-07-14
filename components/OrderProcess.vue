@@ -402,6 +402,10 @@ const total = cartStore.getCartItems.reduce(
   0
 );
 // console.log('total: ', total);
+console.log(
+  'process.env.YANDEX_ORDER_SUBMIT: ',
+  process.env.YANDEX_ORDER_SUBMIT
+);
 
 function closeOrderAndCart() {
   cartStore.hideOrderProcess();
