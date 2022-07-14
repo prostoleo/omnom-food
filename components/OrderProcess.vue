@@ -196,7 +196,7 @@
           <input type="hidden" name="need-email" value="true" />
           <input type="hidden" name="need-phone" value="true" />
           <input type="hidden" name="need-address" value="true" />
-          <!-- <input type="hidden" name="successUrl" :value="successUrl" /> -->
+          <input type="hidden" name="successUrl" :value="successUrl" />
           <label class="hidden"
             ><input
               type="radio"
@@ -263,7 +263,7 @@ console.log('route: ', route);
 const router = useRouter();
 console.log('router: ', router);
 
-// const successUrl = `${window.location.origin}/?payment=success`;
+const successUrl = `${window.location.origin}/?payment=success`;
 // console.log('successUrl: ', successUrl);
 
 const hiddenForm = ref();
@@ -401,11 +401,12 @@ const someInputHasNoValue = computed(() => {
   });
 });
 
-const total = cartStore.getCartItems.reduce(
+const total = JSON.parse(JSON.stringify(cartStore.getCartItems)).reduce(
   (acc, item) => acc + item.price * item.quantity,
   0
 );
-// console.log('total: ', total);
+console.log('total: ', total);
+console.log('typeof total: ', typeof total);
 /* console.log(
   'process.env.YANDEX_ORDER_SUBMIT: ',
   process.env.YANDEX_ORDER_SUBMIT
