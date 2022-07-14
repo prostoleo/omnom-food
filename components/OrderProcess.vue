@@ -306,6 +306,7 @@ const ONLINE_PAYMENT_METHODS = {
 };
 
 const WALLET_ID = process.env.YOU_MONEY_WALLET_ID;
+// console.log('WALLET_ID: ', WALLET_ID);
 
 const chosenPaymentMethod = ref('');
 const chosenOnlinePaymentMethods = ref('');
@@ -432,8 +433,8 @@ async function submitOrder() {
       address: address.val,
       ...(email.val && { email: email.val }),
       cartItems,
-      subject: `Новый заказ с сайта ${window.location.href}`,
-      fromWebsite: window.location.href,
+      subject: `Новый заказ с сайта ${window.location.origin}`,
+      fromWebsite: window.location.origin,
     };
     // console.log('orderData: ', orderData);
 
@@ -464,12 +465,15 @@ async function submitOrder() {
       });
       cartStore.removeItemsFromLocalStorage();
       cartStore.$reset();
+
+      return;
     }
 
     if (chosenPaymentMethod.value === PAYMENT_METHODS.ONLINE) {
       isLoading.value = false;
 
       hiddenForm.value.submit();
+      return;
     }
   } catch (error) {
     console.log(error);
