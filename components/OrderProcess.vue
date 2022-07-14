@@ -248,6 +248,7 @@ import {
   ref,
   watch,
   useRoute,
+  useRouter,
 } from '@nuxtjs/composition-api';
 import BaseButtonPrimary from './Base/BaseButtonPrimary.vue';
 import { useCartStore } from '~/store/cart';
@@ -258,6 +259,9 @@ const isLoading = ref(false);
 const cartStore = useCartStore();
 
 const route = useRoute();
+console.log('route: ', route);
+const router = useRouter();
+console.log('router: ', router);
 
 const successUrl = `${window.location.origin}/?payment=success`;
 // console.log('successUrl: ', successUrl);
@@ -397,15 +401,16 @@ const someInputHasNoValue = computed(() => {
   });
 });
 
-const total = cartStore.getCartItems.reduce(
+const total = JSON.parse(JSON.stringify(cartStore.getCartItems)).reduce(
   (acc, item) => acc + item.price * item.quantity,
   0
 );
-// console.log('total: ', total);
-console.log(
+console.log('total: ', total);
+console.log('typeof total: ', typeof total);
+/* console.log(
   'process.env.YANDEX_ORDER_SUBMIT: ',
   process.env.YANDEX_ORDER_SUBMIT
-);
+); */
 
 function closeOrderAndCart() {
   cartStore.hideOrderProcess();
@@ -440,6 +445,7 @@ async function submitOrder() {
       subject: `Новый заказ с сайта ${window.location.origin}`,
       fromWebsite: window.location.origin,
     };
+
     // console.log('orderData: ', orderData);
 
     isLoading.value = true;
