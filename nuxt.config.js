@@ -82,6 +82,8 @@ export default {
 
   env: {
     YANDEX_FUNC_SUBMIT: process.env.YANDEX_FUNC_SUBMIT,
+    YANDEX_ORDER_SUBMIT: process.env.YANDEX_ORDER_SUBMIT,
+    YOU_MONEY_WALLET_ID: process.env.YOU_MONEY_WALLET_ID,
   },
 
   publicRuntimeConfig: {
