@@ -444,7 +444,9 @@ async function submitOrder() {
 
     isLoading.value = true;
 
-    const response = await fetch(process.env.YANDEX_ORDER_SUBMIT, {
+    const url = process.env.YANDEX_ORDER_SUBMIT;
+
+    const response = await fetch(`${url}`, {
       method: 'POST',
       headers: {
         Accept: '/',
