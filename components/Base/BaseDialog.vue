@@ -255,7 +255,6 @@ async function submitHandler() {
       duration: 5000,
       type: 'is-danger',
     });
-  } finally {
   }
 }
 </script>

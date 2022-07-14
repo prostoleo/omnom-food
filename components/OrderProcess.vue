@@ -247,8 +247,8 @@ import {
   reactive,
   ref,
   watch,
-  useRoute,
-  useRouter,
+  // useRoute,
+  // useRouter,
 } from '@nuxtjs/composition-api';
 import BaseButtonPrimary from './Base/BaseButtonPrimary.vue';
 import { useCartStore } from '~/store/cart';
@@ -258,18 +258,19 @@ import { REG_EXP_PHONE } from '~/utils/regexpPhone';
 const isLoading = ref(false);
 const cartStore = useCartStore();
 
-const route = useRoute();
+/* const route = useRoute();
 console.log('route: ', route);
 const router = useRouter();
-console.log('router: ', router);
+console.log('router: ', router); */
 
 const successUrl = `${window.location.origin}/?payment=success`;
 // console.log('successUrl: ', successUrl);
 
 const hiddenForm = ref();
 // const inputNames = ['receiver', 'show']
+/*
 let hiddenData = reactive({});
-watch(hiddenForm, (val) => {
+ watch(hiddenForm, (val) => {
   if (val) {
     // console.log('hiddenForm: ', hiddenForm);
 
@@ -291,7 +292,7 @@ watch(hiddenForm, (val) => {
 
     hiddenData = data;
   }
-});
+}); */
 
 const PAYMENT_METHODS = {
   ONLINE: 'Онлайн',
@@ -405,8 +406,8 @@ const total = JSON.parse(JSON.stringify(cartStore.getCartItems)).reduce(
   (acc, item) => acc + item.price * item.quantity,
   0
 );
-console.log('total: ', total);
-console.log('typeof total: ', typeof total);
+// console.log('total: ', total);
+// console.log('typeof total: ', typeof total);
 /* console.log(
   'process.env.YANDEX_ORDER_SUBMIT: ',
   process.env.YANDEX_ORDER_SUBMIT
